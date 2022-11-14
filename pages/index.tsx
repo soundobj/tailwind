@@ -2,64 +2,57 @@ import Head from 'next/head'
 import Image from 'next/image'
 
 import styles from '@/pages/index.module.css'
+import Toggle from '@/components/Toggle/Toggle'
+import Currency from '@/components/Currency/Currency'
 
-export default function Home() {
+
+export type Currency = {
+  id: string,
+  type: string,
+  name: string,
+  code: string,
+  isSupportedInUS: boolean,
+  supportsTestMode: boolean,
+}
+
+export async function getServerSideProps() {
+
+  // @TODO: handle exceptions
+  // @TODO: handle pagination
+  const currencies = await fetch('https://api.moonpay.com/v3/currencies')
+    .then((response) => response.json())
+
+  return {
+    props: {
+      currencies,
+    },
+  }
+}
+
+export default function Home(props: { currencies: Currency[] }) {
+
+  const { currencies } = props;
+
+  console.log('currencies', currencies);
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>MoonfPay Challenge</title>
+        <link rel="icon" href="https://www.moonpay.com/favicon-purple-32x32.png" />
       </Head>
-
+      <nav className='container'>
+        <Toggle label="foo" onChange={(checked: boolean) => console.log('toggle checked', checked)} />
+      </nav>
       <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a href="https://vercel.com/new" className={styles.card}>
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <ul>
+          {currencies.map((currency: Currency) =>
+            <li key={currency.code}>
+              <Currency {...currency} />
+            </li>
+          )}
+        </ul>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
   )
 }
