@@ -5,9 +5,8 @@ const Currency = (props: Currency) => {
   const { code, name, isSupportedInUS, supportsTestMode, type } = props
 
   return (
-    <article className="p-3 bg-slate-200 ring-gray-900/5 m-2 rounded">
-      <main>
-
+    <article className="p-3 bg-slate-200 m-4 rounded shadow-xl">
+      <header>
         <dl className="flex justify-between">
           <dt>
             {name}
@@ -16,12 +15,12 @@ const Currency = (props: Currency) => {
             {code}
           </dd>
         </dl>
-        <div className="mt-10 mb-10">
-          {(type === 'fiat')
-            ? <img className="w-40 m-auto" src="/money-svgrepo-com.svg" title="fiat" />
-            : <img className="w-40 m-auto" src="/qtum-svgrepo-com.svg" title="crypto" />
-          }
-        </div>
+      </header>
+      <main className="mt-10 mb-10">
+        {(type === 'fiat')
+          ? <img className="w-40 m-auto" src="/money-svgrepo-com.svg" title="fiat" />
+          : <img className="w-40 m-auto" src="/qtum-svgrepo-com.svg" title="crypto" />
+        }
       </main>
       <footer>
         <ul className="flex justify-between">
@@ -43,7 +42,7 @@ const Currency = (props: Currency) => {
                 Test Mode:
               </dt>
               <dd>
-              {supportsTestMode
+                {supportsTestMode
                   ? <img className="w-5 h-5" src="/box-tick-svgrepo-com.svg" title="yes" />
                   : <img className="w-5 h-5" src="/box-cross-svgrepo-com.svg" title="no" />}
               </dd>
