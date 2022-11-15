@@ -30,7 +30,7 @@ const SORT_OPTIONS = [
   { id: 'name', label: 'Name'},
 ]
 
-// @TODO: some of these utilities could be lifted to a utils.ts file and write tests for them
+// @TODO: move utilities to its own utils.ts file and write tests for them
 const getTruthyFilters = (filters: Filters): Filters => Object.keys(filters).reduce<Filters>((acc, cur) => {
   if (filters[cur]) {
     acc[cur] = true;
@@ -65,7 +65,7 @@ export default function Home(props: { currencies: Currency[] }) {
   const { currencies } = props;
 
   const [filters, setFilters] = useState<Filters>({
-    // @TODO: extract reoccurring strings ie 'isSupportedInUS' into consts for reuse
+    // @TODO: create consts for reoccurring strings ie 'isSupportedInUS'
     isSupportedInUS: false,
     supportsTestMode: false,
   });
@@ -79,7 +79,7 @@ export default function Home(props: { currencies: Currency[] }) {
     setFilters(nextFilters)
   }
 
-  console.log(filters, sort);
+  const filteredCurrencies = orderBy(filterCurrencies(filters, currencies), [sort], ['asc']) as Currency[];
   
   return (
     <div className='container md mx-auto'>
@@ -94,8 +94,7 @@ export default function Home(props: { currencies: Currency[] }) {
       </nav>
       <main>
         <ul className='grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-          {/* @ts-ignore */}
-          {orderBy(filterCurrencies(filters, currencies), [sort], ['asc']).map((currency: Currency) =>
+          {filteredCurrencies.map((currency: Currency) =>
             <li key={currency.code}>
               <Currency {...currency} />
             </li>
