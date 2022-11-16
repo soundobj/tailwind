@@ -3,6 +3,7 @@
 ### Q) What libraries did you add to the frontend? What are they used for?
 tailwind: general styling
 lodash: utility methods for sorting and filtering
+I lifted the tailwind code for the `<Toggle>` from a blog
 
 ### Q) What libraries did you add to the backend? What are they used for?
 
