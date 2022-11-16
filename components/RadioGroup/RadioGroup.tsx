@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const RadioGroup = (props: RadioGroupProps) => {
-  const { options, onChange, groupLabel, checkedId } = props;
+  const { options, onChange, checkedId } = props;
   const [checked, setChecked] = useState<string>(checkedId);
 
   const onGroupChange = (option: RadioOption) => {
@@ -11,31 +11,27 @@ const RadioGroup = (props: RadioGroupProps) => {
   }
 
   return (
-    <div className="flex text-xl p-2">
-      <span className="grow">{groupLabel}</span>
-      <fieldset className="flex">
-        {options.map((option) => {
-          const { label, id } = option
-          return (<label key={id} htmlFor={id}>
-            <input
-              className="peer appearance-none"
-              onChange={() => onGroupChange(option)}
-              type="radio"
-              id={id}
-              value={id}
-              checked={id === checked}
-            />
-            <span
-              className="peer-checked:border-b-4 ml-4 border-green-400 peer-focus:ring-2 p-1"
-            >
-              {label}
-            </span>
-          </label>)
-        }
-        )}
-      </fieldset>
-    </div>
-
+    <fieldset className="flex">
+      {options.map((option) => {
+        const { label, id } = option
+        return (<label key={id} htmlFor={id}>
+          <input
+            className="peer appearance-none"
+            onChange={() => onGroupChange(option)}
+            type="radio"
+            id={id}
+            value={id}
+            checked={id === checked}
+          />
+          <span
+            className="peer-checked:border-b-4 ml-4 border-green-400 peer-focus:ring-2 p-1"
+          >
+            {label}
+          </span>
+        </label>)
+      }
+      )}
+    </fieldset>
   )
 }
 
@@ -48,7 +44,6 @@ export type RadioOption = {
 export type RadioGroupProps = {
   options: RadioOption[]
   onChange: (sortId: string) => void
-  groupLabel?: string
   checkedId: string
 }
 

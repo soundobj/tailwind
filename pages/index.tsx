@@ -1,4 +1,4 @@
-import { useState  } from 'react'
+import { useState } from 'react'
 import orderBy from 'lodash/orderBy'
 
 import Head from 'next/head'
@@ -25,8 +25,8 @@ export async function getServerSideProps() {
 }
 
 const SORT_OPTIONS = [
-  { id: 'code', label: 'Code'},
-  { id: 'name', label: 'Name'},
+  { id: 'code', label: 'Code' },
+  { id: 'name', label: 'Name' },
 ]
 
 export default function Home(props: { currencies: Currency[] }) {
@@ -50,7 +50,7 @@ export default function Home(props: { currencies: Currency[] }) {
   }
 
   const filteredCurrencies = orderBy(filterCurrencies(filters, currencies), [sort], ['asc']) as Currency[];
-  
+
   return (
     <div className='container md mx-auto'>
       <Head>
@@ -61,7 +61,10 @@ export default function Home(props: { currencies: Currency[] }) {
         {/* @TODO i18n */}
         <Toggle id={'isSupportedInUS'} label={'Supported in USA'} onChange={onToggleChange} />
         <Toggle id={'supportsTestMode'} label={'Supports Test Mode'} onChange={onToggleChange} />
-        <RadioGroup onChange={setSort} options={SORT_OPTIONS} groupLabel="Sort by" checkedId={sort} />
+        <div className="flex text-xl p-2">
+          <span className="grow">Sort by</span>
+          <RadioGroup onChange={setSort} options={SORT_OPTIONS} checkedId={sort} />
+        </div>
       </nav>
       <main>
         <ul className='grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
