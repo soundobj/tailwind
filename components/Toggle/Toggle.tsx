@@ -2,7 +2,7 @@ import { FilterValue } from "../../types"
 import { ChangeEvent } from "react"
 
 const Toggle = (props: TogglePros) => {
-  const { label, id, onChange} = props
+  const { label, id, onChange, checked} = props
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange({checked: event.target.checked, id})
@@ -12,6 +12,7 @@ const Toggle = (props: TogglePros) => {
     <label className="relative flex justify-between items-center p-2 text-xl">
       {label}
       <input
+        checked={checked}
         id={id}
         type="checkbox"
         onChange={onInputChange}
@@ -24,6 +25,7 @@ const Toggle = (props: TogglePros) => {
 export type TogglePros = {
   label: string,
   id: string,
+  checked?: boolean,
   onChange: (nextFilterValue: FilterValue) => void,
 }
 

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import orderBy from 'lodash/orderBy'
+import shuffle from 'lodash/shuffle'
 
 import Head from 'next/head'
 
@@ -39,6 +40,8 @@ export default function Home(props: { currencies: Currency[] }) {
     supportsTestMode: false,
   });
 
+  const [shouldShuffle, setShouldShuffle] = useState<boolean>(false);
+
   // defaulting to first sort option
   const [sort, setSort] = useState<string>(SORT_OPTIONS[0].id)
 
@@ -49,8 +52,23 @@ export default function Home(props: { currencies: Currency[] }) {
     setFilters(nextFilters)
   }
 
-  const filteredCurrencies = orderBy(filterCurrencies(filters, currencies), [sort], ['asc']) as Currency[];
+  const onSortChange = (sortId: string) => {
+    setSort(sortId);
+    setShouldShuffle(false);
+  }
 
+  const shuffleCurrencies = (nextFilterValue: FilterValue) => {
+    /*
+      I assume that we should remove sorting when we shuffle and viceversa, if we are sorting
+      the shuffle should be removed
+    */
+    setShouldShuffle(nextFilterValue.checked);
+    setSort('');
+  }
+
+  const filteredAndSortedCurrencies = orderBy(filterCurrencies(filters, currencies), [sort], ['asc'])
+  const shuffledCurrencies = ((shouldShuffle) ? shuffle(filteredAndSortedCurrencies) : filteredAndSortedCurrencies) as Currency[]
+  
   return (
     <div className='container md mx-auto'>
       <Head>
@@ -61,14 +79,15 @@ export default function Home(props: { currencies: Currency[] }) {
         {/* @TODO i18n */}
         <Toggle id={'isSupportedInUS'} label={'Supported in USA'} onChange={onToggleChange} />
         <Toggle id={'supportsTestMode'} label={'Supports Test Mode'} onChange={onToggleChange} />
+        <Toggle id={'shuffle'} label={'Shuffle'} onChange={shuffleCurrencies} checked={shouldShuffle} />
         <div className="flex text-xl p-2">
           <span className="grow">Sort by</span>
-          <RadioGroup onChange={setSort} options={SORT_OPTIONS} checkedId={sort} />
+          <RadioGroup onChange={onSortChange} options={SORT_OPTIONS} checkedId={sort} />
         </div>
       </nav>
       <main>
         <ul className='grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-          {filteredCurrencies.map((currency: Currency) =>
+          {shuffledCurrencies.map((currency: Currency) =>
             <li key={currency.code}>
               <CurrencyComp {...currency} />
             </li>
