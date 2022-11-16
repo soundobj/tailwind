@@ -1,7 +1,6 @@
 import { FilterValue } from "../../types"
 import { ChangeEvent } from "react"
 
-
 const Toggle = (props: TogglePros) => {
   const { label, id, onChange} = props
 
@@ -10,7 +9,7 @@ const Toggle = (props: TogglePros) => {
   }
 
   return (
-    <label className="relative flex justify-between items-center group p-2 text-xl">
+    <label className="relative flex justify-between items-center p-2 text-xl">
       {label}
       <input
         id={id}
