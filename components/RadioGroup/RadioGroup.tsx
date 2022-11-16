@@ -1,14 +1,6 @@
-import { useState } from "react";
 
 const RadioGroup = (props: RadioGroupProps) => {
   const { options, onChange, checkedId } = props;
-  const [checked, setChecked] = useState<string>(checkedId);
-
-  const onGroupChange = (option: RadioOption) => {
-    const { id } = option
-    setChecked(id)
-    onChange(id)
-  }
 
   return (
     <fieldset className="flex">
@@ -17,11 +9,11 @@ const RadioGroup = (props: RadioGroupProps) => {
         return (<label key={id} htmlFor={id}>
           <input
             className="peer appearance-none"
-            onChange={() => onGroupChange(option)}
+            onChange={() => onChange(option.id)}
             type="radio"
             id={id}
             value={id}
-            checked={id === checked}
+            checked={id === checkedId}
           />
           <span
             className="peer-checked:border-b-4 ml-4 border-green-400 peer-focus:ring-2 p-1"

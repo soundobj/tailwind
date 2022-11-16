@@ -21,6 +21,8 @@ There is no exception handling for the API call, introducing pagination for larg
 
 The controls section could be polished a bit more for larger screens, perhaps style the RadioGroup a bit better.
 
+`<Toogle>` and `<RadioGroup>` do not have a className prop to override styles so adding them for further reusability
+
 Write unit tests for components and functions
 
 ### Q) Which parts are you most proud of? And why?
