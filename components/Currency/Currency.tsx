@@ -1,6 +1,6 @@
-import { Currency } from "@/pages/index"
+import { Currency as CurrencyProps } from "../../types"
 
-const Currency = (props: Currency) => {
+const Currency = (props: CurrencyProps) => {
 
   const { code, name, isSupportedInUS, supportsTestMode, type } = props
 
@@ -23,32 +23,24 @@ const Currency = (props: Currency) => {
         }
       </main>
       <footer>
-        <ul className="flex justify-between">
-          <li>
-            <dl className="flex items-center">
-              <dt>
-                US support:
-              </dt>
-              <dd>
-                {isSupportedInUS
-                  ? <img className="w-5 h-5" src="/box-tick-svgrepo-com.svg" title="yes" />
-                  : <img className="w-5 h-5" src="/box-cross-svgrepo-com.svg" title="no" />}
-              </dd>
-            </dl>
-          </li>
-          <li>
-            <dl className="flex items-center">
-              <dt>
-                Test Mode:
-              </dt>
-              <dd>
-                {supportsTestMode
-                  ? <img className="w-5 h-5" src="/box-tick-svgrepo-com.svg" title="yes" />
-                  : <img className="w-5 h-5" src="/box-cross-svgrepo-com.svg" title="no" />}
-              </dd>
-            </dl>
-          </li>
-        </ul>
+        <dl className="flex items-center">
+          <dt>
+            US support:
+          </dt>
+          <dd className="grow">
+            {isSupportedInUS
+              ? <img className="w-5 h-5" src="/box-tick-svgrepo-com.svg" title="yes" />
+              : <img className="w-5 h-5" src="/box-cross-svgrepo-com.svg" title="no" />}
+          </dd>
+          <dt>
+            Test Mode:
+          </dt>
+          <dd>
+            {supportsTestMode
+              ? <img className="w-5 h-5" src="/box-tick-svgrepo-com.svg" title="yes" />
+              : <img className="w-5 h-5" src="/box-cross-svgrepo-com.svg" title="no" />}
+          </dd>
+        </dl>
       </footer>
     </article>
   )

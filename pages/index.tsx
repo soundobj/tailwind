@@ -1,50 +1,14 @@
 import { useState  } from 'react'
-import filter from 'lodash/filter'
 import orderBy from 'lodash/orderBy'
 
 import Head from 'next/head'
 
 import Toggle from '@/components/Toggle/Toggle'
-import Currency from '@/components/Currency/Currency'
+import CurrencyComp from '@/components/Currency/Currency'
 import RadioGroup from '@/components/RadioGroup/RadioGroup'
 
-// @TODO: move reused types to own ts definitions file
-export type Currency = {
-  id: string,
-  type: string,
-  name: string,
-  code: string,
-  isSupportedInUS: boolean,
-  supportsTestMode: boolean,
-}
-
-export type Filters = Record<string,boolean>
-
-export type FilterValue = {
-  checked: boolean,
-  id: string,
-}
-
-const SORT_OPTIONS = [
-  { id: 'code', label: 'Code'},
-  { id: 'name', label: 'Name'},
-]
-
-// @TODO: move utilities to its own utils.ts file and write tests for them
-const getTruthyFilters = (filters: Filters): Filters => Object.keys(filters).reduce<Filters>((acc, cur) => {
-  if (filters[cur]) {
-    acc[cur] = true;
-  }
-  return acc;
-}, {});
-
-export const filterCurrencies = (filters: Filters, currencies: Currency[]): Currency[] => {
-  /* 
-    I have assumed that we only want to filter on properties when they are true, otherwise we would
-    have an inital load with already filtered currencies i the ones with filter properties being false
-  */
-  return filter(currencies, {...getTruthyFilters(filters)})
-}
+import { Filters, FilterValue, Currency } from 'types'
+import { filterCurrencies } from 'utils'
 
 export async function getServerSideProps() {
 
@@ -60,6 +24,11 @@ export async function getServerSideProps() {
   }
 }
 
+const SORT_OPTIONS = [
+  { id: 'code', label: 'Code'},
+  { id: 'name', label: 'Name'},
+]
+
 export default function Home(props: { currencies: Currency[] }) {
 
   const { currencies } = props;
@@ -70,7 +39,8 @@ export default function Home(props: { currencies: Currency[] }) {
     supportsTestMode: false,
   });
 
-  const [sort, setSort] = useState<String>()
+  // defaulting to first sort option
+  const [sort, setSort] = useState<string>(SORT_OPTIONS[0].id)
 
   const onToggleChange = (nextFilterValue: FilterValue) => {
     const { id } = nextFilterValue;
@@ -88,15 +58,16 @@ export default function Home(props: { currencies: Currency[] }) {
         <link rel="icon" href="https://www.moonpay.com/favicon-purple-32x32.png" />
       </Head>
       <nav className='ml-3 mr-3'>
-        <Toggle id={'isSupportedInUS'} label={'Show supported in USA'} onChange={onToggleChange} />
-        <Toggle id={'supportsTestMode'} label={'Show Supports Test Mode'} onChange={onToggleChange} />
-        <RadioGroup onChange={setSort} options={SORT_OPTIONS} />
+        {/* @TODO i18n */}
+        <Toggle id={'isSupportedInUS'} label={'Supported in USA'} onChange={onToggleChange} />
+        <Toggle id={'supportsTestMode'} label={'Supports Test Mode'} onChange={onToggleChange} />
+        <RadioGroup onChange={setSort} options={SORT_OPTIONS} groupLabel="Sort by" checkedId={sort} />
       </nav>
       <main>
         <ul className='grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
           {filteredCurrencies.map((currency: Currency) =>
             <li key={currency.code}>
-              <Currency {...currency} />
+              <CurrencyComp {...currency} />
             </li>
           )}
         </ul>
