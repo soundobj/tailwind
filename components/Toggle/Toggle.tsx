@@ -1,4 +1,4 @@
-import { FilterValue } from "@/pages/index"
+import { FilterValue } from "../../types"
 import { ChangeEvent } from "react"
 
 
