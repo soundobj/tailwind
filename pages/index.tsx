@@ -5,7 +5,7 @@ import shuffle from 'lodash/shuffle'
 import Head from 'next/head'
 
 import Toggle from '@/components/Toggle/Toggle'
-import CurrencyComp from '@/components/Currency/Currency'
+import CurrencyList from '@/components/CurrencyList/CurrencyList'
 import RadioGroup from '@/components/RadioGroup/RadioGroup'
 
 import { Filters, FilterValue, Currency } from 'types'
@@ -86,13 +86,7 @@ export default function Home(props: { currencies: Currency[] }) {
         </div>
       </nav>
       <main>
-        <ul className='grid gap-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-          {shuffledCurrencies.map((currency: Currency) =>
-            <li key={currency.code}>
-              <CurrencyComp {...currency} />
-            </li>
-          )}
-        </ul>
+       <CurrencyList items={shuffledCurrencies} />
       </main>
     </div>
   )
