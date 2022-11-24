@@ -9,7 +9,7 @@ export type Currency = {
 
 export type Filters = Record<string,boolean>
 
-export type FilterValue = {
+export type InputValue = {
   checked: boolean,
   id: string,
 }

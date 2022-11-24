@@ -1,15 +1,11 @@
-import { useState } from 'react'
-import orderBy from 'lodash/orderBy'
-import shuffle from 'lodash/shuffle'
-
 import Head from 'next/head'
 
 import Toggle from '@/components/Toggle/Toggle'
 import CurrencyList from '@/components/CurrencyList/CurrencyList'
 import RadioGroup from '@/components/RadioGroup/RadioGroup'
 
-import { Filters, FilterValue, Currency } from 'types'
-import { filterCurrencies } from 'utils'
+import { Currency } from 'types'
+import useListTransform from 'hooks/useListTransform'
 
 export async function getServerSideProps() {
 
@@ -30,45 +26,24 @@ const SORT_OPTIONS = [
   { id: 'name', label: 'Name' },
 ]
 
+const FILTERS = {
+  isSupportedInUS: false,
+  supportsTestMode: false,
+}
+
 export default function Home(props: { currencies: Currency[] }) {
 
   const { currencies } = props;
 
-  const [filters, setFilters] = useState<Filters>({
-    // @TODO: create consts for reoccurring strings ie 'isSupportedInUS'
-    isSupportedInUS: false,
-    supportsTestMode: false,
-  });
+  const {
+    items,
+    shouldShuffle,
+    selectedSort,
+    shuffleItems,
+    onSortChange,
+    onFilterChange
+  } = useListTransform(SORT_OPTIONS, FILTERS, currencies)
 
-  const [shouldShuffle, setShouldShuffle] = useState<boolean>(false);
-
-  // defaulting to first sort option
-  const [sort, setSort] = useState<string>(SORT_OPTIONS[0].id)
-
-  const onToggleChange = (nextFilterValue: FilterValue) => {
-    const { id } = nextFilterValue;
-    const nextFilters = Object.assign({}, filters);
-    nextFilters[id] = !nextFilters[id]
-    setFilters(nextFilters)
-  }
-
-  const onSortChange = (sortId: string) => {
-    setSort(sortId);
-    setShouldShuffle(false);
-  }
-
-  const shuffleCurrencies = (nextFilterValue: FilterValue) => {
-    /*
-      I assume that we should remove sorting when we shuffle and viceversa, if we are sorting
-      the shuffle should be removed
-    */
-    setShouldShuffle(nextFilterValue.checked);
-    setSort('');
-  }
-
-  const filteredAndSortedCurrencies = orderBy(filterCurrencies(filters, currencies), [sort], ['asc'])
-  const shuffledCurrencies = ((shouldShuffle) ? shuffle(filteredAndSortedCurrencies) : filteredAndSortedCurrencies) as Currency[]
-  
   return (
     <div className='container md mx-auto'>
       <Head>
@@ -77,16 +52,16 @@ export default function Home(props: { currencies: Currency[] }) {
       </Head>
       <nav className='ml-3 mr-3'>
         {/* @TODO i18n */}
-        <Toggle id={'isSupportedInUS'} label={'Supported in USA'} onChange={onToggleChange} />
-        <Toggle id={'supportsTestMode'} label={'Supports Test Mode'} onChange={onToggleChange} />
-        <Toggle id={'shuffle'} label={'Shuffle'} onChange={shuffleCurrencies} checked={shouldShuffle} />
+        <Toggle id={'isSupportedInUS'} label={'Supported in USA'} onChange={onFilterChange} />
+        <Toggle id={'supportsTestMode'} label={'Supports Test Mode'} onChange={onFilterChange} />
+        <Toggle id={'shuffle'} label={'Shuffle'} onChange={shuffleItems} checked={shouldShuffle} />
         <div className="flex text-xl p-2">
           <span className="grow">Sort by</span>
-          <RadioGroup onChange={onSortChange} options={SORT_OPTIONS} checkedId={sort} />
+          <RadioGroup onChange={onSortChange} options={SORT_OPTIONS} checkedId={selectedSort} />
         </div>
       </nav>
       <main>
-       <CurrencyList items={shuffledCurrencies} />
+        <CurrencyList items={items} />
       </main>
     </div>
   )

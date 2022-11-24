@@ -15,7 +15,7 @@ const CurrencyList = (props: CurrencyListProps) => {
 }
 
 type CurrencyListProps = {
-  items: any[]
+  items: Currency[]
 }
 
 export default CurrencyList
