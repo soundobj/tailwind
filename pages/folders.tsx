@@ -54,8 +54,6 @@ const Item = (props: FolderItem) => {
 }
 
 export default function Folders() {
-
-
   return (
     <div className='container md mx-auto h-full'>
       <Head>
