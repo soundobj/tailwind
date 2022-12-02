@@ -51,7 +51,7 @@ export default function user(props: { people: People[] }) {
           onChange={searchTermFilter}
           placeholder="Search"
         />
-        <table className='border-separate w-full'>
+        <table className='border-separate w-full border-spacing-0'>
           <thead className='sticky top-0 z-10 bg-white'>
             <tr>
               {keys.map(key =>
