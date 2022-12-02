@@ -32,9 +32,12 @@ export const flattenObject = (obj: any) => {
   return flattened
 }
 
-export const filterByValue = (list: Record<string, string | number>, str: string) => Object.values(list).some(
-  value => ('' + value).includes(str)
-)
+export const filterByValue = (list: Record<string, string | number>, str: string) => {
+  const strLowerCase = str.toLowerCase()
+  return Object.values(list).some(
+    value => ('' + value).toLowerCase().includes(strLowerCase)
+  )
+}
 
 export const sortByProperty = (list: any[], property: string, isSortASC: boolean): any[] => list.sort((a, b) => {
   const value1 = a[property]

@@ -33,7 +33,7 @@ export default function user(props: { people: People[] }) {
   }
 
   const searchTermFilter = (e: any) => {
-    const searchTerm = e.target.value
+    const searchTerm = e.target.value.toLowerCase()
     setSearchTerm(searchTerm)
     const matches = flattenLocations.filter((location) => filterByValue(location, searchTerm))
     setLocations(matches)
@@ -45,12 +45,17 @@ export default function user(props: { people: People[] }) {
         <title>User Table</title>
       </Head>
       <main className='ml-3 mr-3'>
-        <input className='border-2 border-black p-2' type="text" onChange={searchTermFilter} />
-        <table className='table-auto'>
-          <thead className='sticky top-0 z-10 bg-white border-b-2 border-black'>
+        <input
+          className='border-2 border-black p-2 rounded' 
+          type="text"
+          onChange={searchTermFilter}
+          placeholder="Search"
+        />
+        <table className='border-separate w-full'>
+          <thead className='sticky top-0 z-10 bg-white'>
             <tr>
               {keys.map(key =>
-                <th key={key}>
+                <th key={key} className="border-b-2 p-2">
                   <button onClick={() => sortColumn(key)}>
                     {key}
                   </button>
@@ -58,13 +63,13 @@ export default function user(props: { people: People[] }) {
             </tr>
           </thead>
           <tbody>
-            {locations.map((location, i) => <tr key={`location_${i}`}>
+            {locations.map((location, i) => <tr key={`location_${i}`} className="border-0">
               {keys.map(data => {
                 const locationToString = "" + location[data]
-                const shouldHighLightCell = searchTerm.length && locationToString.includes(searchTerm)
+                const shouldHighLightCell = searchTerm.length && locationToString.toLowerCase().includes(searchTerm)
                 return (
                   <td
-                    className={`border-2 border-black p-2 ${ shouldHighLightCell ? "bg-green-500" : ""}`}
+                    className={`border-b-2 p-2 ${ shouldHighLightCell ? "bg-green-500" : ""}`}
                     key={`location_${i}_${data}`}>
                     {locationToString}
                   </td>)
