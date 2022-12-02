@@ -62,9 +62,17 @@ describe("mine sweeper", () => {
       ]
 
       const expected = [
-        []
+        [0,0], 
+        [0,1],
+        [1,0],
+        [2,0],
+        [3,0],
+        [1,1],
+        [2,1],
       ]
-      const res = getVisibleCells(0, 0, board)      
+      const res = getVisibleCells(0, 0, board)
+      console.log('res', res);
+         
       expect(res).toMatchObject(expected)
     })
   })

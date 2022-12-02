@@ -78,21 +78,74 @@ export const placeMineHints = (board: MineBoard): MineBoard => {
   return board
 }
 
-/*
-  if you click on a mine or a hint just return the coordinate
-  if you click on a zero return all empty cells on every direction until you find a hint or the edge of the board
+const isMoveValid = (x: number, y: number, board: MineBoard): boolean => {
+  if (board[x] !== undefined && board[x][y] !== undefined && !isCellMined(x, y, board)) {
+    return true
+  }
+  return false
+}
 
-  0 0 0 0 0
-  -2 -1 x +1 +2
-  0 0 0 0 0
-*/
+const isCellMined = (x: number, y: number, board: MineBoard): boolean => {
+  const value = board[x][y]
+  return typeof value === 'string' && value !== 'x'
+}
+
+const isFoundHint = (x: number, y: number, board: MineBoard): boolean => board[x][y] !== 0
+
+const directions: number[][] = [
+  [-1, 0],  // north
+  [-1, -1], // north west
+  [-1, 1],  // north east
+  [0, 1],   //east
+  [0, -1],  // west
+  [1, 0],   // south
+  [1, -1],  // south west
+  [1, 1],   // south east
+]
+
+//@TODO: diagonal misses neighbour cells, need to find a recursive way: from any 0 any direction
+
 export const getVisibleCells = (x: number, y: number, board: MineBoard): number[][] => {
-  const directions = [
-    //north
-    {
-      foundHint: false,
-      nextPos: (x: number, y: number): [number, number] => [x + 1, y]
-    }
-  ]
+  const visibleCells: number[][] = []
+  const origX = x
+  const origY = y
 
+  if (isFoundHint(x, y, board) || isCellMined(x, y, board)) {
+    // if a mine or a hint is directly clicked on, return the coordinate
+    visibleCells.push([x, y])
+    console.log('coord is hint or mine');
+    return visibleCells
+  }
+
+  visibleCells.push([x, y])
+
+  // if you click on a zero return all empty cells on every direction until you find a hint or the edge of the board
+  directions.forEach(direction => {
+    const [nextX, nextY] = direction
+    // console.log('nextX', nextX, 'nextY', nextY);
+    x = origX,
+    y = origY
+
+    // skip original position so we do not get duplicates
+    x += nextX
+    y += nextY
+
+    for (let i = 0; i < board.length; i++) {
+      // console.log('x', x, 'y', y);
+      if (!isMoveValid(x, y, board)) {
+        // console.log('not valid', x, y);
+        break
+      }
+      if (isFoundHint(x, y, board)) {
+        // console.log('found hint', x, y);
+        visibleCells.push([x, y])
+        break
+      }
+      // console.log('adding', x, y);
+      visibleCells.push([x, y])
+      x += nextX
+      y += nextY
+    }
+  })
+  return visibleCells
 }
