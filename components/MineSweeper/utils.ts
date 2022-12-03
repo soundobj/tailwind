@@ -50,20 +50,20 @@ export const countMines = (board: MineBoard): number => {
   [n][n-1] ->    [n][n] ->   [n][n+1]
   [n+1][n-1] ->  [n+1][n] -> [n+1][n+1]
 */
-export const getAdjacentMineCount = (x: number, y: number, board: MineBoard): number => {
-  const deviations = [-1, 0, 1]
-  let mineCount = 0
-  for (let i = 0; i < deviations.length; i++) {
-    for (let j = 0; j < deviations.length; j++) {
-      const testX = deviations[i] + x
-      const testY = deviations[j] + y
-      if (board[testX] !== undefined && board[testX][testY] !== undefined) {
-        mineCount += board[testX][testY] === 'x' ? 1 : 0
-      }
-    }
-  }
-  return mineCount
-}
+// export const getAdjacentMineCount = (x: number, y: number, board: MineBoard): number => {
+//   const deviations = [-1, 0, 1]
+//   let mineCount = 0
+//   for (let i = 0; i < deviations.length; i++) {
+//     for (let j = 0; j < deviations.length; j++) {
+//       const testX = deviations[i] + x
+//       const testY = deviations[j] + y
+//       if (board[testX] !== undefined && board[testX][testY] !== undefined) {
+//         mineCount += board[testX][testY] === 'x' ? 1 : 0
+//       }
+//     }
+//   }
+//   return mineCount
+// }
 
 // export const placeMineHints = (board: MineBoard): MineBoard => {
 //   for (let i = 0; i < board.length; i++) {
