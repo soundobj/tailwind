@@ -124,7 +124,7 @@ export const getVisibleCells = (x: number, y: number, board: MineBoard): number[
     const [nextX, nextY] = direction
     // console.log('nextX', nextX, 'nextY', nextY);
     x = origX,
-    y = origY
+      y = origY
 
     // skip original position so we do not get duplicates
     x += nextX
@@ -149,3 +149,129 @@ export const getVisibleCells = (x: number, y: number, board: MineBoard): number[
   })
   return visibleCells
 }
+
+const UP = [-1, 0]
+const RIGHT = [0, 1]
+const DOWN = [1, 0]
+const LEFT = [0, -1]
+
+export const DOWN_RIGHT = [DOWN, RIGHT, UP, RIGHT]
+export const UP_LEFT = [UP, LEFT, DOWN, LEFT]
+
+export const traverseBoard = (
+  x: number,
+  y: number,
+  board: MineBoard,
+  traverseSteps: number[][],
+  cellValueCallBack?: (value: string | number) => 'BREAK' | 'CONTINUE' | 'CHANGE_DIR'
+): number[][] => {
+  const boardLocations = []
+  let direction = 0
+  let invalidMoves = 0 // end of board === two invalid moves in a row
+  let lastInvalidMoveIndex = undefined
+  const boardCells = board.length * board[0].length
+  for (let i = 0; i < boardCells; i++) {
+    const [ix, iy] = traverseSteps[direction]
+    x += ix
+    y += iy
+    if (!isMoveValid(x, y, board) && invalidMoves > 1) {
+      // console.log('we are at the end');
+      break
+    } else if (!isMoveValid(x, y, board)) {
+      // console.log('change direction');
+      lastInvalidMoveIndex = i
+      invalidMoves += 1
+      if (direction === 3) {
+        direction = 0
+      } else {
+        direction += 1
+      }
+      continue
+    }
+    if (lastInvalidMoveIndex !== undefined) {
+      invalidMoves = 0
+    }
+    boardLocations.push([x, y])
+    // console.log('direction', direction, 'loc:', [x, y]);
+  }
+
+  return boardLocations
+}
+
+
+export const revealCells = (x: number, y: number, board: MineBoard): number[][] => {
+  const visitedCells = new Set<string>()
+  const visibleCells: number[][] = []
+  if (isFoundHint(x, y, board) || isCellMined(x, y, board)) {
+    // if a mine or a hint is directly clicked on, return the coordinate
+    visibleCells.push([x, y])
+    console.log('coord is hint or mine');
+    return visibleCells
+  }
+
+  visibleCells.push([x, y])
+  visitedCells.add(`${x}${y}`)
+
+  const recursiveEmptyCells = (x: number, y: number, board: MineBoard) => {
+    // console.log('x', x, 'y', y);    
+    for (let i = 0; i < directions.length; i++) {
+      const [ix, iy] = directions[i]
+      let tx = y + ix
+      let ty = y + iy
+      if (!isMoveValid(tx, ty, board) || isCellMined(tx, ty, board) || visitedCells.has(`${tx}${ty}`)) {
+        console.log('not vaild or already visited', tx, ty);
+        continue
+      }
+      if (isFoundHint(tx, ty, board)) {
+        visibleCells.push([tx, ty])
+        visitedCells.add(`${tx}${ty}`)
+        console.log('coord is hint', tx, ty);
+        continue
+      }
+      visibleCells.push([tx, ty])
+      visitedCells.add(`${tx}${ty}`)
+      recursiveEmptyCells(tx, ty, board)
+
+    }
+  }
+
+  recursiveEmptyCells(x, y, board)
+  console.log('visitedCells', visitedCells);
+
+  return visibleCells
+
+}
+
+export const adjacentMines = function (board: MineBoard, x: number, y: number) {
+  let numMines = 0;
+  for (let i = x - 1; i <= x + 1; ++i) { //loops to check all 8 squares around the click
+    for (let k = y - 1; k <= y + 1; ++k) {
+      if (i >= 0 && i < board.length && k >= 0 && k < board[i].length && board[i][k] == 'M') //makes sure the algorithm is only checking squares that are ON the board
+        numMines += 1;
+    }
+  }
+
+  return numMines;
+}
+export const updateBoard = function (board: MineBoard, click: [number, number]) { //main function
+  if (!board) return board
+
+  let [x, y] = click
+  if (board[x][y] == 'M') { //if the click landed on a mine, change it to X
+    board[x][y] = 'X';
+  } else {
+    let numMines = adjacentMines(board, x, y); //find out how many mines are around the square
+    if (numMines > 0) {
+      board[x][y] = numMines.toString() //remember to return the number as a string
+    } else {
+      board[x][y] = 'B'
+      for (let a = x - 1; a < x + 2; a++) { //another nested loop to check all 8 squares around a click
+        for (let b = y - 1; b < y + 2; b++) { // this time we're looking for squares around the click that are NOT blank
+          if (a >= 0 && a < board.length && b >= 0 && b < board[a].length && board[a][b] !== 'B') //making sure we stay on the board here 
+            updateBoard(board, [a, b]) //call the updateBoard function again with new click coordinates
+        }
+      }
+    }
+  }
+  return board;
+};
