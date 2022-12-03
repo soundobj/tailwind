@@ -244,9 +244,11 @@ export const revealCells = (x: number, y: number, board: MineBoard): number[][] 
 
 export const adjacentMines = function (board: MineBoard, x: number, y: number) {
   let numMines = 0;
-  for (let i = x - 1; i <= x + 1; ++i) { //loops to check all 8 squares around the click
-    for (let k = y - 1; k <= y + 1; ++k) {
-      if (i >= 0 && i < board.length && k >= 0 && k < board[i].length && board[i][k] == 'M') //makes sure the algorithm is only checking squares that are ON the board
+  //loops to check all 8 squares around the click
+  for (let i = x - 1; i <= x + 1; i++) { 
+    for (let k = y - 1; k <= y + 1; k++) {
+      //makes sure the algorithm is only checking squares that are ON the board
+      if (i >= 0 && i < board.length && k >= 0 && k < board[i].length && board[i][k] == 'M') 
         numMines += 1;
     }
   }
@@ -257,18 +259,19 @@ export const updateBoard = function (board: MineBoard, click: [number, number]) 
   if (!board) return board
 
   let [x, y] = click
-  if (board[x][y] == 'M') { //if the click landed on a mine, change it to X
+  if (board[x][y] === 'M') { //game over
     board[x][y] = 'X';
   } else {
-    let numMines = adjacentMines(board, x, y); //find out how many mines are around the square
+    let numMines = adjacentMines(board, x, y);
     if (numMines > 0) {
-      board[x][y] = numMines.toString() //remember to return the number as a string
+      board[x][y] = numMines.toString()
     } else {
       board[x][y] = 'B'
-      for (let a = x - 1; a < x + 2; a++) { //another nested loop to check all 8 squares around a click
-        for (let b = y - 1; b < y + 2; b++) { // this time we're looking for squares around the click that are NOT blank
-          if (a >= 0 && a < board.length && b >= 0 && b < board[a].length && board[a][b] !== 'B') //making sure we stay on the board here 
-            updateBoard(board, [a, b]) //call the updateBoard function again with new click coordinates
+      for (let a = x - 1; a <= x + 1; a++) { //another nested loop to check all 8 squares around a click
+        for (let b = y - 1; b <= y + 1; b++) { // this time we're looking for squares around the click that are NOT blank
+          //making sure we stay on the board here 
+          if (a >= 0 && a < board.length && b >= 0 && b < board[a].length && board[a][b] !== 'B')
+            updateBoard(board, [a, b])
         }
       }
     }
