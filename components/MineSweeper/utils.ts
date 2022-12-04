@@ -45,46 +45,11 @@ export const countMines = (board: MineBoard): number => {
   return foundMines
 }
 
-/*
-  [n-1][n-1] ->  [n-1][n] -> [n-1][n+1]
-  [n][n-1] ->    [n][n] ->   [n][n+1]
-  [n+1][n-1] ->  [n+1][n] -> [n+1][n+1]
-*/
-// export const getAdjacentMineCount = (x: number, y: number, board: MineBoard): number => {
-//   const deviations = [-1, 0, 1]
-//   let mineCount = 0
-//   for (let i = 0; i < deviations.length; i++) {
-//     for (let j = 0; j < deviations.length; j++) {
-//       const testX = deviations[i] + x
-//       const testY = deviations[j] + y
-//       if (board[testX] !== undefined && board[testX][testY] !== undefined) {
-//         mineCount += board[testX][testY] === 'x' ? 1 : 0
-//       }
-//     }
-//   }
-//   return mineCount
-// }
-
-// export const placeMineHints = (board: MineBoard): MineBoard => {
-//   for (let i = 0; i < board.length; i++) {
-//     for (let j = 0; j < board.length; j++) {
-//       const cell = board[i][j]
-//       if (cell === 'x') {
-//         continue
-//       }
-//       board[i][j] = getAdjacentMineCount(i, j, board)
-//     }
-//   }
-//   return board
-// }
-
 export const adjacentMines = function (board: MineBoard, x: number, y: number) {
   let numMines = 0;
-  // check all 8 squares around the click
-  for (let i = x - 1; i <= x + 1; i++) { 
+  for (let i = x - 1; i <= x + 1; i++) {
     for (let k = y - 1; k <= y + 1; k++) {
-      // ensure coords are valid
-      if (i >= 0 && i < board.length && k >= 0 && k < board[i].length && board[i][k] == 'M') 
+      if (i >= 0 && i < board.length && k >= 0 && k < board[i].length && board[i][k] == 'M')
         numMines += 1;
     }
   }
@@ -92,7 +57,7 @@ export const adjacentMines = function (board: MineBoard, x: number, y: number) {
 }
 export const updateBoard = function (board: MineBoard, click: [number, number]) { //main function
   let [x, y] = click
-  if (board[x][y] === 'M') { 
+  if (board[x][y] === 'M') {
     board[x][y] = 'X' //game over
   } else {
     let numMines = adjacentMines(board, x, y)
@@ -100,7 +65,6 @@ export const updateBoard = function (board: MineBoard, click: [number, number]) 
       board[x][y] = numMines.toString()
     } else {
       board[x][y] = 'B'
-       // check all 8 squares around the click
       for (let a = x - 1; a <= x + 1; a++) {
         for (let b = y - 1; b <= y + 1; b++) {
           // ensure coords are valid and ignore revealed blank spaces
@@ -112,3 +76,49 @@ export const updateBoard = function (board: MineBoard, click: [number, number]) 
   }
   return board;
 };
+
+
+export const isValidMove = (board: any[][], x: number, y: number): boolean => {
+  return (x >= 0 && x < board.length && y >= 0 && y < board[x].length)
+}
+
+export const iterateAdjacentCells = (board: any[][], pos: [number, number], callBack: (board: any[][], pos: number[]) => void) => {
+  const [x, y] = pos
+  for (let i = x - 1; i <= x + 1; i++) {
+    for (let j = y - 1; j <= y + 1; j++) {
+      callBack(board, [i, j])
+    }
+  }
+}
+
+export const countAdjacentMines = (board: MineBoard, pos: [number, number]): number => {
+  let mines = 0
+  iterateAdjacentCells(board, pos, (board: MineBoard, pos: number[]) => {
+    const [x, y] = pos
+    if (isValidMove(board, x, y) && board[x][y] === 'M') {
+      mines += 1
+    }
+  })
+  return mines
+}
+
+export const revealCells = (board: MineBoard, pos: [number, number]): (MineBoard | string) => {
+  const [x, y] = pos
+  if (board[x][y] === 'M') {
+    return 'X' // GAME OVER 
+  }
+  const adjacentMines = countAdjacentMines(board, pos)
+  if (adjacentMines) {
+    board[x][y] = adjacentMines.toString()
+    return board
+  } else {
+    board[x][y] = 'B'
+    iterateAdjacentCells(board, pos, (board: MineBoard, pos: number[]) => {
+      const [x, y] = pos
+      if (isValidMove(board, x, y) && board[x][y] !== 'B') {
+        revealCells(board, [x, y])
+      }
+    })
+  }
+  return board
+}
