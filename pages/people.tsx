@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { flattenObject, filterByValue, sortByProperty } from '../utils'
 
 type People = {
@@ -36,7 +36,7 @@ export default function user(props: { people: People[] }) {
     setSearchTerm(searchTerm)
   }
 
-  const filteredLocations = locations.filter((location) => filterByValue(location, searchTerm))
+  const filteredLocations = useMemo(() => locations.filter((location) => filterByValue(location, searchTerm)), [searchTerm])
 
   return (
     <div className='container md mx-auto h-full'>
