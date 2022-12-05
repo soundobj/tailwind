@@ -102,10 +102,11 @@ export const countAdjacentMines = (board: MineBoard, pos: [number, number]): num
   return mines
 }
 
-export const revealCells = (board: MineBoard, pos: [number, number]): (MineBoard | string) => {
+export const revealCells = (board: MineBoard, pos: [number, number]): MineBoard => {
   const [x, y] = pos
   if (board[x][y] === 'M') {
-    return 'X' // GAME OVER 
+    board[x][y] = 'X'
+    return board // GAME OVER 
   }
   const adjacentMines = countAdjacentMines(board, pos)
   if (adjacentMines) {

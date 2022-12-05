@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { useState } from 'react'
 import { flattenObject, filterByValue, sortByProperty } from '../utils'
-import deepclone from 'lodash/cloneDeep'
 
 type People = {
   location: any
@@ -24,7 +23,7 @@ export default function user(props: { people: People[] }) {
   const keys = Object.keys(flattenLocations[0])
 
   const [isSortASC, setIsSortASC] = useState<boolean>(true)
-  const [locations, setLocations] = useState<any[]>(deepclone(flattenLocations))
+  const [locations, setLocations] = useState<any[]>(flattenLocations)
   const [searchTerm, setSearchTerm] = useState<string>('')
 
   const sortColumn = (column: string) => {
@@ -35,9 +34,9 @@ export default function user(props: { people: People[] }) {
   const searchTermFilter = (e: any) => {
     const searchTerm = e.target.value.toLowerCase()
     setSearchTerm(searchTerm)
-    const matches = flattenLocations.filter((location) => filterByValue(location, searchTerm))
-    setLocations(matches)
   }
+
+  const filteredLocations = locations.filter((location) => filterByValue(location, searchTerm))
 
   return (
     <div className='container md mx-auto h-full'>
@@ -63,7 +62,7 @@ export default function user(props: { people: People[] }) {
             </tr>
           </thead>
           <tbody>
-            {locations.map((location, i) => <tr key={`location_${i}`} className="border-0">
+            {filteredLocations.map((location, i) => <tr key={`location_${i}`} className="border-0">
               {keys.map(data => {
                 const locationToString = "" + location[data]
                 const shouldHighLightCell = searchTerm.length && locationToString.toLowerCase().includes(searchTerm)
