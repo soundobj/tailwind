@@ -25,8 +25,8 @@ export const placeMines = (board: MineBoard, mines: number): MineBoard => {
   }
   for (let i = 0; i < mines;) {
     const [x, y] = getRandomCoordinates(board.length)
-    if (board[x][y] !== 'x') {
-      board[x][y] = 'x'
+    if (board[x][y] !== 'M') {
+      board[x][y] = 'M'
       i++
     }
   }
@@ -37,7 +37,7 @@ export const countMines = (board: MineBoard): number => {
   let foundMines = 0
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board.length; j++) {
-      if (board[i][j] === 'x') {
+      if (board[i][j] === 'M') {
         foundMines++
       }
     }
@@ -57,6 +57,8 @@ export const adjacentMines = function (board: MineBoard, x: number, y: number) {
 }
 export const updateBoard = function (board: MineBoard, click: [number, number]) { //main function
   let [x, y] = click
+console.log('UPDATE BOARD', x, y);
+
   if (board[x][y] === 'M') {
     board[x][y] = 'X' //game over
   } else {
@@ -122,4 +124,24 @@ export const revealCells = (board: MineBoard, pos: [number, number]): MineBoard 
     })
   }
   return board
+}
+
+export const hasBoardGotValue = (board: MineBoard, value: any): boolean => {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board.length; j++) {
+      if (board[i][j] === value) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+export const isGameOver = (board: MineBoard): boolean => hasBoardGotValue(board, 'X')
+
+export const isGameCompleted = (board: MineBoard): boolean => !hasBoardGotValue(board, 0)
+
+export const isCellMine = (board: MineBoard, pos: [number, number]): boolean => {
+  const [x, y] = pos
+  return board[x][y] === 'X'
 }
