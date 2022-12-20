@@ -55,23 +55,29 @@ export const adjacentMines = function (board: MineBoard, x: number, y: number) {
   }
   return numMines;
 }
-export const updateBoard = function (board: MineBoard, click: [number, number]) { //main function
+export const updateBoard = function (
+  board: MineBoard,
+  click: [number, number],
+  callback: (coords: [x: number, y: number]) => void = () => { }
+) {
   let [x, y] = click
-console.log('UPDATE BOARD', x, y);
 
   if (board[x][y] === 'M') {
     board[x][y] = 'X' //game over
+    callback([x, y])
   } else {
     let numMines = adjacentMines(board, x, y)
     if (numMines > 0) {
       board[x][y] = numMines.toString()
+      callback([x, y])
     } else {
       board[x][y] = 'B'
+      callback([x, y])
       for (let a = x - 1; a <= x + 1; a++) {
         for (let b = y - 1; b <= y + 1; b++) {
           // ensure coords are valid and ignore revealed blank spaces
           if (a >= 0 && a < board.length && b >= 0 && b < board[a].length && board[a][b] !== 'B')
-            updateBoard(board, [a, b])
+            updateBoard(board, [a, b], callback)
         }
       }
     }
@@ -144,4 +150,14 @@ export const isGameCompleted = (board: MineBoard): boolean => !hasBoardGotValue(
 export const isCellMine = (board: MineBoard, pos: [number, number]): boolean => {
   const [x, y] = pos
   return board[x][y] === 'X'
+}
+
+export const getCoordsKey = (pos: [number, number]) => {
+  const [x, y] = pos
+  return `${x},${y}`
+}
+
+export type RevealedCoords = Map<string, [number, number]>
+export const addRevealedCords = (pos: [number, number], set: RevealedCoords) => {
+  set.set(getCoordsKey(pos), pos)
 }

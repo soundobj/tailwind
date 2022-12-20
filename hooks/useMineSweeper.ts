@@ -1,22 +1,26 @@
 import { useState, useEffect } from 'react';
-import { cloneDeep } from 'lodash';
-import { generateBoard, isCellMine, isGameCompleted, MineBoard, placeMines, updateBoard } from '../components/MineSweeper/utils';
+import { cloneDeep, curryRight } from 'lodash';
+import { generateBoard, isCellMine, isGameCompleted, MineBoard, placeMines, RevealedCoords, updateBoard, addRevealedCords } from '../components/MineSweeper/utils';
 
 
 function useMineSweeper() {
   const [board, setBoard] = useState<MineBoard>([[]]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameWon, setIsGameWon] = useState(false);
+  const [revealedCoords, setRevealedCoords] = useState<RevealedCoords>(new Map());
 
   useEffect(() => {
     resetGame();
   }, []);
 
   const updateGame = ([i, j]: number[]) => {
-    console.log('updateGame', i, j);
-    
-    const nextBoard = updateBoard(cloneDeep(board), [i, j]);
-console.log('nextBoard', nextBoard);
+    const nextRevealedCoords = new Map();
+    const nextBoard = updateBoard(
+      cloneDeep(board),
+      [i, j],
+      curryRight(addRevealedCords)(nextRevealedCoords)
+    )
+    setRevealedCoords(nextRevealedCoords)
 
     if (isCellMine(nextBoard, [i, j])) {
       setIsGameOver(true);
@@ -37,7 +41,8 @@ console.log('nextBoard', nextBoard);
     updateGame,
     resetGame,
     isGameOver,
-    isGameWon
+    isGameWon,
+    revealedCoords,
   };
 }
 
