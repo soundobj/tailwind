@@ -80,13 +80,8 @@ describe('grid animatior utils', () => {
         [2, 0],
         [3, 0]
       ];
-      const visited = new Set<string>();
-      const sequence: any[] = [];
-      outwardSpiral(
-        board,
-        sequence,
-      );
-      expect(sequence).toMatchObject(expected);
+      const res = outwardSpiral(board);
+      expect(res).toMatchObject(expected);
     });
   });
   describe('sequencer', () => {

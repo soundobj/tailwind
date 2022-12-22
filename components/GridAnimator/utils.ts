@@ -117,8 +117,7 @@ export const outwardSpiral = (
     }
     lap++
   }
-  // console.log('sequence', sequence);
-  // console.log('visited', visited);
+  return sequence
 }
 
 
