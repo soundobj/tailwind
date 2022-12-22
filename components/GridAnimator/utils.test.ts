@@ -1,7 +1,8 @@
 import {
   bottomCornerToTopCornerSequence,
-  BottomToTop,
+  bottomToTop,
   sequencer,
+  outwardsSpiral,
 } from './utils';
 
 jest.useFakeTimers();
@@ -28,7 +29,7 @@ describe('grid animatior utils', () => {
       expect(bottomCornerToTopCornerSequence(board)).toEqual(expected);
     });
   });
-  describe('BottomToTop', () => {
+  describe('bottomToTop', () => {
     it('should return an array of coordinates in the correct order', () => {
       const board = [
         [0, 0, 0],
@@ -44,11 +45,46 @@ describe('grid animatior utils', () => {
       ];
       const visited = new Map<string, boolean>([['2,2', true]]);
       const sequence = [[[2, 2]]];
-      BottomToTop(
+      bottomToTop(
         board,
         [[2, 2]],
         sequence,
         visited
+      );
+      expect(sequence).toMatchObject(expected);
+    });
+  });
+  describe.only('outwardsSpiral', () => {
+    it('should return an array of coordinates in the correct order', () => {
+      const board = [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ];
+      const expected = [
+        [2, 2],
+        [2, 3],
+        [1, 3],
+        [1, 2],
+        [1, 1],
+        [2, 1],
+        [3, 1],
+        [3, 2],
+        [3, 3],
+        [0, 3],
+        [0, 2],
+        [0, 1],
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [3, 0]
+      ];
+      const visited = new Set<string>();
+      const sequence: any[] = [];
+      outwardsSpiral(
+        board,
+        sequence,
       );
       expect(sequence).toMatchObject(expected);
     });
