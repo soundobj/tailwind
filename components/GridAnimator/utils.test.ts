@@ -2,7 +2,7 @@ import {
   bottomCornerToTopCornerSequence,
   bottomToTop,
   sequencer,
-  outwardsSpiral,
+  outwardSpiral,
 } from './utils';
 
 jest.useFakeTimers();
@@ -54,7 +54,7 @@ describe('grid animatior utils', () => {
       expect(sequence).toMatchObject(expected);
     });
   });
-  describe.only('outwardsSpiral', () => {
+  describe('outwardSpiral', () => {
     it('should return an array of coordinates in the correct order', () => {
       const board = [
         [0, 0, 0, 0],
@@ -82,7 +82,7 @@ describe('grid animatior utils', () => {
       ];
       const visited = new Set<string>();
       const sequence: any[] = [];
-      outwardsSpiral(
+      outwardSpiral(
         board,
         sequence,
       );

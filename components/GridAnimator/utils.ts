@@ -51,7 +51,7 @@ export const middleOfTwoDimensionalArray = (grid: any[][]) => {
   return [row, col];
 }
 
-export const outwardsSpiral = (
+export const outwardSpiral = (
   grid: any[][],
   sequence: any[] = [],
   visited: Set<string> = new Set(),
