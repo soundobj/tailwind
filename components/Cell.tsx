@@ -1,6 +1,8 @@
 const Cell = (props: CellProps) => {
   const { className, value } = props
 
+  // console.log('Cell', props);
+  
   return (
     <div className={className}>
       {value}
@@ -10,7 +12,7 @@ const Cell = (props: CellProps) => {
 
 interface CellProps {
   className?: string
-  value: string | number
+  value?: string | number
 }
 
 export default Cell
