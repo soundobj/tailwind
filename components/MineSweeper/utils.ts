@@ -3,7 +3,6 @@ export type Cell = {
   revealed?: boolean,
   flagged?: boolean,
   className?: string,
-  coords?: string,
 }
 
 export const generateBoard = (size: number): Cell[][] => {
