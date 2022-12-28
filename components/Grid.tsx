@@ -1,11 +1,12 @@
 import { ComponentType } from "react"
+import { Cell as CellType } from "./MineSweeper/utils"
 
 const Grid = (props: GridProps) => {
   const { grid, onCellClick, Cell } = props
 
   return (
     <div className='grid grid-cols-10 max-w-lg m-auto gap-1'>
-      {grid.map((row: (string | number)[], i: number) => (
+      {grid.map((row: CellType[], i: number) => (
         <>
           {row.map((cell, j) => (
             <div
@@ -13,7 +14,7 @@ const Grid = (props: GridProps) => {
               onClick={typeof onCellClick === 'function' ? () => onCellClick([i, j]) : undefined}
               className="bg-gray-300 relative w-full justify-self-center border-black border before:h-0 before:inline-block before:pt-[100%] before:relative before:w-[1px]">
               <div className='absolute top-0 left-0 bottom-0 w-full grid justify-items-start align-items'>
-                <Cell value={cell} />
+                <Cell {...cell} />
               </div>
             </div>
           ))}
@@ -26,13 +27,7 @@ const Grid = (props: GridProps) => {
 interface GridProps {
   grid: any[][],
   onCellClick?: (pos: number[]) => void
-  Cell: ComponentType<CellProps>
+  Cell: ComponentType<CellType>
 }
-
-type CellProps = {
-  value: string | number
-  className?: string
-}
-
 
 export default Grid

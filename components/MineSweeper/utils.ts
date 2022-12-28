@@ -1,16 +1,23 @@
-export const generateBoard = (size: number): number[][] => {
+export type Cell = {
+  value: (number | string),
+  revealed?: boolean,
+  flagged?: boolean,
+  className?: string,
+}
+
+export const generateBoard = (size: number): Cell[][] => {
   const board = []
   for (let i = 0; i < size; i++) {
     const row = []
     for (let j = 0; j < size; j++) {
-      row.push(0)
+      row.push({ value: 0 })
     }
     board.push(row)
   }
   return board
 }
 
-export type MineBoard = (number | string)[][]
+export type MineBoard = Cell[][]
 
 export const getRandomCoordinates = (boardLength: number) => {
   return [
@@ -25,19 +32,20 @@ export const placeMines = (board: MineBoard, mines: number): MineBoard => {
   }
   for (let i = 0; i < mines;) {
     const [x, y] = getRandomCoordinates(board.length)
-    if (board[x][y] !== 'M') {
-      board[x][y] = 'M'
+    if (board[x][y].value !== 'M') {
+      board[x][y] = { value: 'M' }
       i++
     }
   }
   return board
 }
 
+
 export const countMines = (board: MineBoard): number => {
   let foundMines = 0
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board.length; j++) {
-      if (board[i][j] === 'M') {
+      if (board[i][j].value === 'M') {
         foundMines++
       }
     }
@@ -49,7 +57,7 @@ export const adjacentMines = function (board: MineBoard, x: number, y: number) {
   let numMines = 0;
   for (let i = x - 1; i <= x + 1; i++) {
     for (let k = y - 1; k <= y + 1; k++) {
-      if (i >= 0 && i < board.length && k >= 0 && k < board[i].length && board[i][k] == 'M')
+      if (i >= 0 && i < board.length && k >= 0 && k < board[i].length && board[i][k].value == 'M')
         numMines += 1;
     }
   }
@@ -62,21 +70,21 @@ export const updateBoard = function (
 ) {
   let [x, y] = click
 
-  if (board[x][y] === 'M') {
-    board[x][y] = 'X' //game over
+  if (board[x][y].value === 'M') {
+    board[x][y].value = 'X' //game over
     callback([x, y])
   } else {
     let numMines = adjacentMines(board, x, y)
     if (numMines > 0) {
-      board[x][y] = numMines.toString()
+      board[x][y].value = numMines.toString()
       callback([x, y])
     } else {
-      board[x][y] = 'B'
+      board[x][y].value = 'B'
       callback([x, y])
       for (let a = x - 1; a <= x + 1; a++) {
         for (let b = y - 1; b <= y + 1; b++) {
           // ensure coords are valid and ignore revealed blank spaces
-          if (a >= 0 && a < board.length && b >= 0 && b < board[a].length && board[a][b] !== 'B')
+          if (a >= 0 && a < board.length && b >= 0 && b < board[a].length && board[a][b].value !== 'B')
             updateBoard(board, [a, b], callback)
         }
       }
@@ -103,7 +111,7 @@ export const countAdjacentMines = (board: MineBoard, pos: [number, number]): num
   let mines = 0
   iterateAdjacentCells(board, pos, (board: MineBoard, pos: number[]) => {
     const [x, y] = pos
-    if (isValidMove(board, x, y) && board[x][y] === 'M') {
+    if (isValidMove(board, x, y) && board[x][y].value === 'M') {
       mines += 1
     }
   })
@@ -112,19 +120,19 @@ export const countAdjacentMines = (board: MineBoard, pos: [number, number]): num
 
 export const revealCells = (board: MineBoard, pos: [number, number]): MineBoard => {
   const [x, y] = pos
-  if (board[x][y] === 'M') {
-    board[x][y] = 'X'
+  if (board[x][y].value === 'M') {
+    board[x][y].value = 'X'
     return board // GAME OVER 
   }
   const adjacentMines = countAdjacentMines(board, pos)
   if (adjacentMines) {
-    board[x][y] = adjacentMines.toString()
+    board[x][y].value = adjacentMines.toString()
     return board
   } else {
-    board[x][y] = 'B'
+    board[x][y].value = 'B'
     iterateAdjacentCells(board, pos, (board: MineBoard, pos: number[]) => {
       const [x, y] = pos
-      if (isValidMove(board, x, y) && board[x][y] !== 'B') {
+      if (isValidMove(board, x, y) && board[x][y].value !== 'B') {
         revealCells(board, [x, y])
       }
     })
@@ -135,7 +143,7 @@ export const revealCells = (board: MineBoard, pos: [number, number]): MineBoard 
 export const hasBoardGotValue = (board: MineBoard, value: any): boolean => {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board.length; j++) {
-      if (board[i][j] === value) {
+      if (board[i][j].value === value) {
         return true;
       }
     }
@@ -149,7 +157,7 @@ export const isGameCompleted = (board: MineBoard): boolean => !hasBoardGotValue(
 
 export const isCellMine = (board: MineBoard, pos: [number, number]): boolean => {
   const [x, y] = pos
-  return board[x][y] === 'X'
+  return board[x][y].value === 'X'
 }
 
 export const getCoordsKey = (pos: [number, number]) => {

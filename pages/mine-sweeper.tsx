@@ -8,7 +8,8 @@ export default function MineSweeper() {
   const { board, updateGame, resetGame, revealedCoords, isGameOver, isGameWon } = useMineSweeper();
 
   const [showCells, setShowCells] = useState(false);
-  console.log('revealedCoords', revealedCoords);
+  // console.log('revealedCoords', revealedCoords);
+  // console.log('board', board);
 
   return (
     <div className=''>
