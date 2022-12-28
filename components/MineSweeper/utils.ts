@@ -3,6 +3,7 @@ export type Cell = {
   revealed?: boolean,
   flagged?: boolean,
   className?: string,
+  coords?: string,
 }
 
 export const generateBoard = (size: number): Cell[][] => {
@@ -66,26 +67,22 @@ export const adjacentMines = function (board: MineBoard, x: number, y: number) {
 export const updateBoard = function (
   board: MineBoard,
   click: [number, number],
-  callback: (coords: [x: number, y: number]) => void = () => { }
 ) {
   let [x, y] = click
 
   if (board[x][y].value === 'M') {
-    board[x][y].value = 'X' //game over
-    callback([x, y])
+    board[x][y] = { value: 'X', className: 'mine', revealed: true, coords: `${x},${y}` }
   } else {
     let numMines = adjacentMines(board, x, y)
     if (numMines > 0) {
-      board[x][y].value = numMines.toString()
-      callback([x, y])
+      board[x][y] = { value: numMines.toString(), className: 'adjacent', revealed: true, }
     } else {
-      board[x][y].value = 'B'
-      callback([x, y])
+      board[x][y] = { value: 'B', className: 'blank', revealed: true, }
       for (let a = x - 1; a <= x + 1; a++) {
         for (let b = y - 1; b <= y + 1; b++) {
           // ensure coords are valid and ignore revealed blank spaces
           if (a >= 0 && a < board.length && b >= 0 && b < board[a].length && board[a][b].value !== 'B')
-            updateBoard(board, [a, b], callback)
+            updateBoard(board, [a, b])
         }
       }
     }
