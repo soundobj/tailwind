@@ -5,7 +5,7 @@ import Grid from '@/components/Grid';
 import Cell from '@/components/Cell';
 
 export default function MineSweeper() {
-  const { board, updateGame, resetGame, revealedCoords, isGameOver, isGameWon } = useMineSweeper();
+  const { board, updateGame, resetGame, isGameOver, isGameWon } = useMineSweeper();
 
   const [showCells, setShowCells] = useState(false);
   // console.log('revealedCoords', revealedCoords);

@@ -12,20 +12,16 @@ function useMineSweeper() {
   const [board, setBoard] = useState<MineBoard>([[]]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameWon, setIsGameWon] = useState(false);
-  const [revealedCoords, setRevealedCoords] = useState<RevealedCoords>(new Map());
 
   useEffect(() => {
     resetGame();
   }, []);
 
   const updateGame = ([i, j]: number[]) => {
-    const nextRevealedCoords = new Map();
     const nextBoard = updateBoard(
       cloneDeep(board),
       [i, j],
-      curryRight(addRevealedCords)(nextRevealedCoords)
     )
-    setRevealedCoords(nextRevealedCoords)
 
     if (isCellMine(nextBoard, [i, j])) {
       setIsGameOver(true);
@@ -47,7 +43,6 @@ function useMineSweeper() {
     resetGame,
     isGameOver,
     isGameWon,
-    revealedCoords,
   };
 }
 
