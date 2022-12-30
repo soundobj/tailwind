@@ -1,5 +1,6 @@
 import { ComponentType } from "react"
 import { Cell as CellType } from "./MineSweeper/utils"
+import React from 'react'
 
 const Grid = (props: GridProps) => {
   const { grid, onCellClick, Cell } = props
@@ -7,7 +8,7 @@ const Grid = (props: GridProps) => {
   return (
     <div className='grid grid-cols-10 max-w-lg m-auto gap-1'>
       {grid.map((row: CellType[], i: number) => (
-        <>
+        <React.Fragment key={`grid_fragment_${i}`}>
           {row.map((cell, j) => (
             <div
               key={`grid_${i}_${j}`}
@@ -18,7 +19,7 @@ const Grid = (props: GridProps) => {
               </div>
             </div>
           ))}
-        </>
+        </React.Fragment>
       ))}
     </div>
   )

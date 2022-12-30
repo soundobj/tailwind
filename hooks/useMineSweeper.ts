@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { cloneDeep, curryRight } from 'lodash';
+import { cloneDeep } from 'lodash';
 import {
-  generateBoard, addRevealedCords,
+  generateBoard,
   isCellMine, isGameCompleted,
-  MineBoard, placeMines,
-  RevealedCoords, updateBoard,
+  MineBoard, placeMines, updateBoard,
 } from '../components/MineSweeper/utils';
 
 
