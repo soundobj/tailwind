@@ -3,18 +3,13 @@ import { Cell as CellType } from "./MineSweeper/utils"
 
 
 const getRandomSign = () => Math.random() >= 0.5 ? "" : "-"
+const getRandomValue = (max: number) => `${getRandomSign()}${Math.random() * max}` 
 
 const Cell = (props: CellType) => {
   const { className, value } = props
   const valRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const nextAngle = `${getRandomSign()}${Math.random() * 120}`
-    const nextSkewX = `${getRandomSign()}${Math.random() * 90}`
-    const nexSkewY = `${getRandomSign()}${Math.random() * 90}`
-    const nextXTranslate = `${getRandomSign()}${Math.random() * 30}px`
-    const nextYTranslate = `${getRandomSign()}${Math.random() * 30}px`
-
     if (className === 'blank' || className === 'adjacent') {
       const progressKeyframes = new KeyframeEffect(
         valRef.current,
@@ -24,7 +19,13 @@ const Cell = (props: CellType) => {
             opacity: 1
           },
           {
-            transform: `rotate(${nextAngle}deg) translateX(${nextXTranslate}) translateY(${nextYTranslate}) skew(${nextSkewX}deg, ${nexSkewY}deg) scale(0)`,
+            transform: `
+              rotate(${getRandomValue(120)}deg)
+              translateX(${getRandomValue(30)}px)
+              translateY(${getRandomValue(30)}px)
+              skew(${getRandomValue(90)}deg,${getRandomValue(90)}deg)
+              scale(0)
+            `,
             opacity: 0,
             display: "none"
           }
@@ -42,7 +43,7 @@ const Cell = (props: CellType) => {
       {value !== 'M' &&
         <div ref={valRef} className={`w-full p-3 bg-green-500 h-full z-10 absolute before:top-0 left-0 bottom-0`} />
       }
-      <div>
+      <div className={`${value === 'M' ? 'bg-orange-300' : ''}`}>
         {value}
       </div>
     </>
