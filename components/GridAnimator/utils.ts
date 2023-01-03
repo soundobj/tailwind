@@ -122,9 +122,9 @@ export const outwardSpiral = (
 
 
 export const sequencer = (
-  sequence: any[][],
+  sequence: any[],
   rate: number,
-  callback: (sequenceItem: number[][]) => void) => {
+  callback: (sequenceItem: number[]) => void) => {
   let i = 0;
   const interval = setInterval(() => {
     if (i < sequence.length) {

@@ -1,13 +1,13 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Cell as CellType } from "./MineSweeper/utils"
-
 
 const getRandomSign = () => Math.random() >= 0.5 ? "" : "-"
 const getRandomValue = (max: number) => `${getRandomSign()}${Math.random() * max}` 
 
 const Cell = (props: CellType) => {
-  const { className, value } = props
+  const { className, value, reset } = props
   const valRef = useRef<HTMLDivElement>(null)
+  const [animation, setAnimation] = useState<Animation | null>(null)
 
   useEffect(() => {
     if (className === 'blank' || className === 'adjacent') {
@@ -34,9 +34,16 @@ const Cell = (props: CellType) => {
       );
 
       const progressAnimation = new Animation(progressKeyframes, document.timeline);
-      progressAnimation.play();
+      progressAnimation.play()
+      setAnimation(progressAnimation)
     }
   }, [className])
+
+  useEffect(() => {
+    if (reset && animation) {
+      animation.cancel()
+    }
+  }, [reset])
 
   return (
     <>

@@ -3,6 +3,7 @@ export type Cell = {
   revealed?: boolean,
   flagged?: boolean,
   className?: string,
+  reset?: boolean,
 }
 
 export const generateBoard = (size: number): Cell[][] => {
@@ -70,7 +71,7 @@ export const updateBoard = function (
   let [x, y] = click
 
   if (board[x][y].value === 'M') {
-    board[x][y] = { value: 'X', className: 'mine', revealed: true, coords: `${x},${y}` }
+    board[x][y] = { value: 'X', className: 'mine', revealed: true }
   } else {
     let numMines = adjacentMines(board, x, y)
     if (numMines > 0) {
@@ -136,10 +137,10 @@ export const revealCells = (board: MineBoard, pos: [number, number]): MineBoard 
   return board
 }
 
-export const hasBoardGotValue = (board: MineBoard, value: any): boolean => {
+export const hasBoardGotValue = (board: MineBoard, value: any, prop: keyof Cell = 'value'): boolean => {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board.length; j++) {
-      if (board[i][j].value === value) {
+      if (board[i][j][prop] === value) {
         return true;
       }
     }

@@ -6,15 +6,23 @@ import {
   MineBoard, placeMines, updateBoard,
 } from '../components/MineSweeper/utils';
 
+import useResetCellKeyFrameAnimation from '@/components/MineSweeper/useResetCellKeyFrameAnimation';
+
 
 function useMineSweeper() {
   const [board, setBoard] = useState<MineBoard>([[]]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameWon, setIsGameWon] = useState(false);
 
-  useEffect(() => {
-    resetGame();
-  }, []);
+  const { reset } = useResetCellKeyFrameAnimation(board, setBoard);
+
+  const newGame = () => {
+    setBoard(placeMines(generateBoard(10), 10));
+    setIsGameOver(false);
+    setIsGameWon(false);
+  }
+
+  useEffect(() => newGame(), []);
 
   const updateGame = ([i, j]: number[]) => {
     const nextBoard = updateBoard(
@@ -31,9 +39,7 @@ function useMineSweeper() {
   };
 
   const resetGame = () => {
-    setBoard(placeMines(generateBoard(10), 10));
-    setIsGameOver(false);
-    setIsGameWon(false);
+    reset().then(() => newGame())
   };
 
   return {
