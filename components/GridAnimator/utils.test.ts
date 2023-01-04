@@ -111,13 +111,12 @@ describe('grid animatior utils', () => {
         [0, 0], [0, 1], [0, 2],
         [1, 0], [1, 1], [1, 2],
         [2, 0], [2, 1], [2, 2],
-      ]
+      ] as [number, number][];
       const objects = [
         [{ value: 'X' }, { value: 'M' }, { value: 'X' }],
         [{ value: 'M' }, { value: 'X' }, { value: 'X' }],
         [{ value: 'X' }, { value: 'X' }, { value: 'X' }]
       ];
-      //@ts-ignore
       const result = filterCoordinates(coordinates, objects, { value: 'M' });
       expect(result).toEqual([[0, 1], [1, 0]]);
     });
