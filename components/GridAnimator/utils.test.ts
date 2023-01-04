@@ -3,6 +3,7 @@ import {
   bottomToTop,
   sequencer,
   outwardSpiral,
+  filterCoordinates,
 } from './utils';
 
 jest.useFakeTimers();
@@ -102,6 +103,23 @@ describe('grid animatior utils', () => {
       expect(callback).toHaveBeenCalledWith([[2, 0], [1, 1], [0, 2]]);
       expect(callback).toHaveBeenCalledWith([[1, 0], [0, 1]]);
       expect(callback).toHaveBeenCalledWith([[0, 0]]);
+    });
+  });
+  describe('filterCoordinates', () => {
+    it('should return an array of coordinates that match the objects with a value of "M"', () => {
+      const coordinates = [
+        [0, 0], [0, 1], [0, 2],
+        [1, 0], [1, 1], [1, 2],
+        [2, 0], [2, 1], [2, 2],
+      ]
+      const objects = [
+        [{ value: 'X' }, { value: 'M' }, { value: 'X' }],
+        [{ value: 'M' }, { value: 'X' }, { value: 'X' }],
+        [{ value: 'X' }, { value: 'X' }, { value: 'X' }]
+      ];
+      //@ts-ignore
+      const result = filterCoordinates(coordinates, objects, { value: 'M' });
+      expect(result).toEqual([[0, 1], [1, 0]]);
     });
   });
 });

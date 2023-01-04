@@ -3,7 +3,6 @@ import { hasBoardGotValue } from "./utils"
 const useResetCellKeyFrameAnimation = (
   board: any,
   callback: (args: any) => void,
-  interval: number = 50
 ) => {
 
   const reset = () => {
@@ -41,15 +40,13 @@ const useResetCellKeyFrameAnimation = (
           return nextState
         })
         return resolve()
-      }, interval)
-    }
-    )
+      })
+    })
   }
 
   return {
     reset,
   }
-
 }
 
 export default useResetCellKeyFrameAnimation

@@ -135,3 +135,16 @@ export const sequencer = (
     }
   }, rate);
 }
+
+export const filterCoordinates = (
+  coordinates: [number, number][],
+  objects: Record<string, any>[][],
+  filterObject: { [key: string]: any }
+): [number, number][] => {
+  return coordinates.filter((coordinate) => {
+    const [x, y] = coordinate;
+    const object = objects[x][y];
+    return Object.entries(filterObject).every(([key, value]) => object[key] === value);
+  });
+}
+
