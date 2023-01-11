@@ -1,13 +1,10 @@
 import Head from 'next/head'
 import useMineSweeper from 'hooks/useMineSweeper';
-import { useState } from 'react';
 import Grid from '@/components/Grid';
 import Cell from '@/components/Cell';
 
 export default function MineSweeper() {
   const { board, updateGame, resetGame, isGameOver, isGameWon } = useMineSweeper();
-
-  // console.log('board', board);
 
   return (
     <div className=''>

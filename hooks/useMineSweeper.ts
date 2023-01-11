@@ -42,6 +42,7 @@ function useMineSweeper() {
         const [x, y] = sequenceItem;
         const nextBoard = cloneDeep(board)
         nextBoard[x][y].className = 'mine'
+        nextBoard[x][y].revealed = true
         setBoard(nextBoard);
       })
     } else if (isGameCompleted(nextBoard)) {
