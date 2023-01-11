@@ -7,6 +7,7 @@ import {
 } from '../components/MineSweeper/utils';
 
 import useResetCellKeyFrameAnimation from '@/components/MineSweeper/useResetCellKeyFrameAnimation';
+import { filterCoordinates, outwardSpiral, sequencer } from '@/components/GridAnimator/utils';
 
 
 function useMineSweeper() {
@@ -32,6 +33,17 @@ function useMineSweeper() {
 
     if (isCellMine(nextBoard, [i, j])) {
       setIsGameOver(true);
+      const sequence = filterCoordinates(
+        outwardSpiral(nextBoard, [i, j]),
+        nextBoard,
+        { value: 'M' }
+      );
+      sequencer(sequence, 200, (sequenceItem) => {
+        const [x, y] = sequenceItem;
+        const nextBoard = cloneDeep(board)
+        nextBoard[x][y].className = 'mine'
+        setBoard(nextBoard);
+      })
     } else if (isGameCompleted(nextBoard)) {
       setIsGameWon(true);
     }
