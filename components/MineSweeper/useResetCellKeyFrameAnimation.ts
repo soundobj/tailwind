@@ -14,18 +14,10 @@ const useResetCellKeyFrameAnimation = (
       }
 
       callback((prevState: any[][]) => {
-        const nextState = prevState.map((row) => {
-          return row.map((cell) => {
-            if (cell.revealed) {
-              return {
-                ...cell,
-                reset: true,
-              }
-            } else {
-              return cell
-            }
-          })
-        })
+        const nextState = prevState.map((row) => row.map((cell) => ({
+          ...cell,
+          reset: true,
+        })))
         return nextState
       })
 
