@@ -44,13 +44,12 @@ describe('grid animatior utils', () => {
         [[1, 0], [0, 1]],
         [[0, 0]],
       ];
-      const visited = new Map<string, boolean>([['2,2', true]]);
+
       const sequence = [[[2, 2]]];
       bottomToTop(
         board,
         [[2, 2]],
         sequence,
-        visited
       );
       expect(sequence).toMatchObject(expected);
     });

@@ -18,9 +18,9 @@ export const bottomToTop = (
   board: any[][],
   lastSequence: number[][],
   sequence: any[][] = [[]],
-  visited: Map<string, boolean>
+  visited: Map<string, boolean> = new Map<string, boolean>([[getLastIndex2D(board).toString(), true]])
 ) => {
-
+  
   if (visited.has('0,0')) {
     return
   }
@@ -147,4 +147,6 @@ export const filterCoordinates = (
     return Object.entries(filterObject).every(([key, value]) => object[key] === value);
   });
 }
+
+export const getLastIndex2D = (array: any[][]) => [array.length - 1, array[array.length - 1].length - 1];
 
