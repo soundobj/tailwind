@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { Cell as CellType } from "./MineSweeper/utils"
 
 const getRandomSign = () => Math.random() >= 0.5 ? "" : "-"
-const getRandomValue = (max: number) => `${getRandomSign()}${Math.random() * max}` 
+const getRandomValue = (max: number) => `${getRandomSign()}${Math.random() * max}`
+const isMine = (value: string | number) => value === 'M' || value === 'X'
 
 const Cell = (props: CellType) => {
   const { className, value, reset } = props
@@ -10,7 +11,7 @@ const Cell = (props: CellType) => {
   const [animation, setAnimation] = useState<Animation | null>(null)
 
   useEffect(() => {
-    if (className === 'blank' || className === 'adjacent') {
+    if (className) {      
       const progressKeyframes = new KeyframeEffect(
         valRef.current,
         [
@@ -47,9 +48,7 @@ const Cell = (props: CellType) => {
 
   return (
     <>
-      {value !== 'M' &&
-        <div ref={valRef} className={`w-full p-3 bg-green-500 h-full z-10 absolute before:top-0 left-0 bottom-0`} />
-      }
+      <div ref={valRef} className={`w-full p-3 bg-green-500 ${ isMine(value) ? 'h-30' : 'h-full'} z-10 absolute before:top-0 left-0 bottom-0`} />
       <div className={`${value === 'M' ? 'bg-orange-300' : ''}`}>
         {value}
       </div>
