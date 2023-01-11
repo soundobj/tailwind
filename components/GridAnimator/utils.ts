@@ -53,9 +53,9 @@ export const middleOfTwoDimensionalArray = (grid: any[][]) => {
 
 export const outwardSpiral = (
   grid: any[][],
+  coordStart: number[] = middleOfTwoDimensionalArray(grid),
   sequence: any[] = [],
   visited: Set<string> = new Set(),
-  coordStart: number[] = middleOfTwoDimensionalArray(grid)
 ) => {
   sequence.push([...coordStart]);
   visited.add(coordStart.toString())
