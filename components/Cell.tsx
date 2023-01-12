@@ -5,32 +5,43 @@ const getRandomSign = () => Math.random() >= 0.5 ? "" : "-"
 const getRandomValue = (max: number) => `${getRandomSign()}${Math.random() * max}`
 const isMine = (value: string | number) => value === 'M' || value === 'X'
 
+const scaleAnimation = [
+  { transform: "scale(1)", offset: 0 },
+  { transform: "scale(1.5)", offset: 0.5 },
+  { transform: "scale(1)", offset: 1 },
+];
+
+const randomPeelAnimation = () =>  [
+  {
+    transform: `rotate(0deg) translateX(0) translateY(0) skew(0deg, 0deg) scale(1)`,
+    opacity: 1
+  },
+  {
+    transform: `
+      rotate(${getRandomValue(120)}deg)
+      translateX(${getRandomValue(30)}px)
+      translateY(${getRandomValue(30)}px)
+      skew(${getRandomValue(90)}deg,${getRandomValue(90)}deg)
+      scale(0)
+    `,
+    opacity: 0,
+    display: "none"
+  }
+]
+
 const Cell = (props: CellType) => {
   const { className, value, reset } = props
   const valRef = useRef<HTMLDivElement>(null)
   const [animation, setAnimation] = useState<Animation | null>(null)
 
   useEffect(() => {
+
+    const animation = (className === 'reset' ? scaleAnimation : randomPeelAnimation())
+
     if (className) {      
       const progressKeyframes = new KeyframeEffect(
         valRef.current,
-        [
-          {
-            transform: `rotate(0deg) translateX(0) translateY(0) skew(0deg, 0deg) scale(1)`,
-            opacity: 1
-          },
-          {
-            transform: `
-              rotate(${getRandomValue(120)}deg)
-              translateX(${getRandomValue(30)}px)
-              translateY(${getRandomValue(30)}px)
-              skew(${getRandomValue(90)}deg,${getRandomValue(90)}deg)
-              scale(0)
-            `,
-            opacity: 0,
-            display: "none"
-          }
-        ],
+       animation,
         { duration: 600, fill: 'forwards', easing: 'ease-in-out' }
       );
 
