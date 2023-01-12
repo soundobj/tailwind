@@ -1,8 +1,8 @@
 import {
   bottomCornerToTopCornerSequence,
-  bottomToTop,
+  bottomToTopSequence,
   sequencer,
-  outwardSpiral,
+  outwardSpiralSequence,
   filterCoordinates,
 } from './utils';
 
@@ -30,7 +30,7 @@ describe('grid animatior utils', () => {
       expect(bottomCornerToTopCornerSequence(board)).toEqual(expected);
     });
   });
-  describe('bottomToTop', () => {
+  describe('bottomToTopSequence', () => {
     it('should return an array of coordinates in the correct order', () => {
       const board = [
         [0, 0, 0],
@@ -45,16 +45,11 @@ describe('grid animatior utils', () => {
         [[0, 0]],
       ];
 
-      const sequence = [[[2, 2]]];
-      bottomToTop(
-        board,
-        [[2, 2]],
-        sequence,
-      );
+      const sequence = bottomToTopSequence(board);
       expect(sequence).toMatchObject(expected);
     });
   });
-  describe('outwardSpiral', () => {
+  describe('outwardSpiralSequence', () => {
     it('should return an array of coordinates in the correct order', () => {
       const board = [
         [0, 0, 0, 0],
@@ -80,7 +75,7 @@ describe('grid animatior utils', () => {
         [2, 0],
         [3, 0]
       ];
-      const res = outwardSpiral(board);
+      const res = outwardSpiralSequence(board);
       expect(res).toMatchObject(expected);
     });
   });

@@ -13,16 +13,15 @@ export const bottomCornerToTopCornerSequence = (board: any[][]) => {
   return sequence;
 }
 
-
-export const bottomToTop = (
+export const bottomToTopSequence = (
   board: any[][],
-  lastSequence: number[][],
-  sequence: any[][] = [[]],
+  lastSequence: number[][] = [getLastIndex2D(board)],
+  sequence: any[][] =  [[getLastIndex2D(board)]],
   visited: Map<string, boolean> = new Map<string, boolean>([[getLastIndex2D(board).toString(), true]])
-) => {
+): any[][] => {
   
   if (visited.has('0,0')) {
-    return
+    return sequence
   }
 
   const nextSequence = []
@@ -42,7 +41,7 @@ export const bottomToTop = (
     }
   }
   sequence.push(nextSequence)
-  bottomToTop(board, nextSequence, sequence, visited)
+  return bottomToTopSequence(board, nextSequence, sequence, visited)
 }
 
 export const middleOfTwoDimensionalArray = (grid: any[][]) => {
@@ -51,7 +50,7 @@ export const middleOfTwoDimensionalArray = (grid: any[][]) => {
   return [row, col];
 }
 
-export const outwardSpiral = (
+export const outwardSpiralSequence = (
   grid: any[][],
   coordStart: number[] = middleOfTwoDimensionalArray(grid),
   sequence: any[] = [],
