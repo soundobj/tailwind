@@ -1,21 +1,23 @@
 import { useState, useEffect } from 'react';
+
 import { cloneDeep } from 'lodash';
 import {
   generateBoard,
+  hasBoardGotValue,
   isCellMine, isGameCompleted,
   MineBoard, placeMines, updateBoard,
 } from '../components/MineSweeper/utils';
 
-import useResetCellKeyFrameAnimation from '@/components/MineSweeper/useResetCellKeyFrameAnimation';
-import { filterCoordinates, outwardSpiralSequence, sequencer } from '@/components/GridAnimator/utils';
+import { filterCoordinates, outwardSpiralSequence, sequencer, bottomToTopSequence } from '@/components/GridAnimator/utils';
 
 
 function useMineSweeper() {
   const [board, setBoard] = useState<MineBoard>([[]]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameWon, setIsGameWon] = useState(false);
-
-  const { reset } = useResetCellKeyFrameAnimation(board, setBoard);
+  const [isNewGame, setIsNewGame] = useState(false);
+  const [isBoardReset, setIsboardReset] = useState(false);
+  const [startedSquencer, setStartedSquencer] = useState(false);
 
   const newGame = () => {
     setBoard(placeMines(generateBoard(10), 10));
@@ -52,12 +54,58 @@ function useMineSweeper() {
   };
 
   const resetGame = () => {
-    reset().then(() => {
-      // run new game after reset animation
-      const resetSequence = 
-      newGame()
-    })
+    const nextBoard = cloneDeep(board)
+
+    //sanitize board of old classes
+    nextBoard.map((row) => row.map((cell) => {
+      cell.reset = true
+      cell.className = undefined
+      delete cell.revealed
+      return cell
+    }))
+
+    // console.log(JSON.stringify(nextBoard));
+
+    setBoard(nextBoard)
+    setIsNewGame(true)
   };
+
+  useEffect(() => {
+    if (!isNewGame) {
+      return
+    }
+
+    if (board[0][0].reset) {
+      const nextBoard = cloneDeep(board)
+      nextBoard.map((row) => row.map((cell) => {
+        delete cell.reset
+        return cell
+      }))
+
+      setBoard(nextBoard)
+      setIsboardReset(true)
+      return
+    }
+
+    if (isBoardReset && !startedSquencer) {
+      const resetSequence = bottomToTopSequence(board)
+
+      sequencer(resetSequence, 60, (sequenceItem) => {
+        const nextBoard = cloneDeep(board)
+        sequenceItem.map((item: number[]) => {
+          const [x, y] = item;
+          nextBoard[x][y].className = 'reset'
+        })
+        setBoard(nextBoard)
+      }).then(() => {
+        newGame()
+        setIsNewGame(false)
+        setIsboardReset(false)
+        setStartedSquencer(false)
+      })
+      setStartedSquencer(true)
+    }
+  }, [board, isNewGame, isBoardReset, startedSquencer])
 
   return {
     board,
