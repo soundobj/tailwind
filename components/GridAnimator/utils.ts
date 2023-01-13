@@ -16,10 +16,14 @@ export const bottomCornerToTopCornerSequence = (board: any[][]) => {
 export const bottomToTopSequence = (
   board: any[][],
   lastSequence: number[][] = [getLastIndex2D(board)],
-  sequence: any[][] =  [[getLastIndex2D(board)]],
+  sequence: any[][] = [[getLastIndex2D(board)]],
   visited: Map<string, boolean> = new Map<string, boolean>([[getLastIndex2D(board).toString(), true]])
 ): any[][] => {
-  
+
+  if (is2DArrayEmpty(board)) {
+    return [[]]
+  }
+
   if (visited.has('0,0')) {
     return sequence
   }
@@ -86,7 +90,7 @@ export const outwardSpiralSequence = (
       // add lap increment to x and y
       if (lap > 0) {
         pattern[j][0] = x < 0 ? x + -lapIncrement : x !== 0 ? x + lapIncrement : x
-        pattern[j][1] = y < 0 ? y + -lapIncrement : y  !== 0 ? y + lapIncrement : y
+        pattern[j][1] = y < 0 ? y + -lapIncrement : y !== 0 ? y + lapIncrement : y
       }
       const [x2, y2] = pattern[j]
 
@@ -119,20 +123,23 @@ export const outwardSpiralSequence = (
   return sequence
 }
 
-
 export const sequencer = (
   sequence: any[],
   rate: number,
-  callback: (sequenceItem: number[]) => void) => {
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i < sequence.length) {
-      callback(sequence[i])
-      i++;
-    } else {
-      clearInterval(interval)
-    }
-  }, rate);
+  callback: (sequenceItem: any) => void)
+  : Promise<void> => {
+  return new Promise((resolve) => {
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i < sequence.length) {
+        callback(sequence[i])
+        i++;
+      } else {
+        clearInterval(interval)
+        resolve();
+      }
+    }, rate);
+  });
 }
 
 export const filterCoordinates = (
@@ -149,3 +156,4 @@ export const filterCoordinates = (
 
 export const getLastIndex2D = (array: any[][]) => [array.length - 1, array[array.length - 1].length - 1];
 
+export const is2DArrayEmpty = (array: any[][]) => array.every((row) => row.every((item) => item === null));
