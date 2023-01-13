@@ -15,7 +15,7 @@ function useMineSweeper() {
   const [board, setBoard] = useState<MineBoard>([[]]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameWon, setIsGameWon] = useState(false);
-  const [isNewGame, setIsNewGame] = useState(false);
+  const [isResetingGame, setisResetingGame] = useState(false);
   const [isBoardReset, setIsBoardReset] = useState(false);
   const [isSquencerStarted, setIsSquencerStarted] = useState(false);
 
@@ -67,11 +67,11 @@ function useMineSweeper() {
     // console.log(JSON.stringify(nextBoard));
 
     setBoard(nextBoard)
-    setIsNewGame(true)
+    setisResetingGame(true)
   };
 
   useEffect(() => {
-    if (!isNewGame) {
+    if (!isResetingGame) {
       return
     }
 
@@ -99,7 +99,7 @@ function useMineSweeper() {
         setBoard(nextBoard)
       }).then(() => {
         newGame()
-        setIsNewGame(false)
+        setisResetingGame(false)
         setIsBoardReset(false)
         setIsSquencerStarted(false)
         setIsGameWon(false);
@@ -107,7 +107,7 @@ function useMineSweeper() {
       })
       setIsSquencerStarted(true)
     }
-  }, [board, isNewGame, isBoardReset, isSquencerStarted])
+  }, [board, isResetingGame, isBoardReset, isSquencerStarted])
 
   return {
     board,
