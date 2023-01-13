@@ -16,8 +16,8 @@ function useMineSweeper() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameWon, setIsGameWon] = useState(false);
   const [isNewGame, setIsNewGame] = useState(false);
-  const [isBoardReset, setIsboardReset] = useState(false);
-  const [startedSquencer, setStartedSquencer] = useState(false);
+  const [isBoardReset, setIsBoardReset] = useState(false);
+  const [isSquencerStarted, setIsSquencerStarted] = useState(false);
 
   const newGame = () => {
     setBoard(placeMines(generateBoard(10), 10));
@@ -83,11 +83,11 @@ function useMineSweeper() {
       }))
 
       setBoard(nextBoard)
-      setIsboardReset(true)
+      setIsBoardReset(true)
       return
     }
 
-    if (isBoardReset && !startedSquencer) {
+    if (isBoardReset && !isSquencerStarted) {
       const resetSequence = bottomToTopSequence(board)
 
       sequencer(resetSequence, 60, (sequenceItem) => {
@@ -100,12 +100,14 @@ function useMineSweeper() {
       }).then(() => {
         newGame()
         setIsNewGame(false)
-        setIsboardReset(false)
-        setStartedSquencer(false)
+        setIsBoardReset(false)
+        setIsSquencerStarted(false)
+        setIsGameWon(false);
+        setIsGameOver(false);
       })
-      setStartedSquencer(true)
+      setIsSquencerStarted(true)
     }
-  }, [board, isNewGame, isBoardReset, startedSquencer])
+  }, [board, isNewGame, isBoardReset, isSquencerStarted])
 
   return {
     board,
