@@ -4,6 +4,7 @@ import { Cell as CellType } from "./MineSweeper/utils"
 const getRandomSign = () => Math.random() >= 0.5 ? "" : "-"
 const getRandomValue = (max: number) => `${getRandomSign()}${Math.random() * max}`
 const isMine = (value: string | number) => value === 'M' || value === 'X'
+const isReset = (className: string | undefined) => className === 'reset'
 
 const scaleAnimation = [
   { transform: "scale(1)", offset: 0 },
@@ -36,13 +37,19 @@ const Cell = (props: CellType) => {
 
   useEffect(() => {
 
-    const animation = (className === 'reset' ? scaleAnimation : randomPeelAnimation())
+    let animation
+    if (isReset(className)) {
+      animation = scaleAnimation
+    } else if (className === 'adjacent' || className === 'blank' || className === 'mine') {
+      animation = randomPeelAnimation()
+    }
 
-    if (className) {      
+
+    if (animation) {
       const progressKeyframes = new KeyframeEffect(
         valRef.current,
        animation,
-        { duration: 600, fill: 'forwards', easing: 'ease-in-out' }
+        { duration: isReset(className) ? 150 : 600, fill: 'forwards', easing: 'ease-in-out' }
       );
 
       const progressAnimation = new Animation(progressKeyframes, document.timeline);
