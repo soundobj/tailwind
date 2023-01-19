@@ -1,23 +1,24 @@
 import { useState, useEffect } from 'react';
+import { useMachine } from '@xstate/react';
+import { createMachine } from 'xstate';
 
 import { cloneDeep } from 'lodash';
 import {
   generateBoard,
-  hasBoardGotValue,
   isCellMine, isGameCompleted,
   MineBoard, placeMines, updateBoard,
 } from '../components/MineSweeper/utils';
 
+import mineSweeperMachine from '../components/MineSweeper/mineSweeperMachine';
 import { filterCoordinates, outwardSpiralSequence, sequencer, bottomToTopSequence } from '@/components/GridAnimator/utils';
 
+const msMachine = createMachine(mineSweeperMachine)
 
 function useMineSweeper() {
   const [board, setBoard] = useState<MineBoard>([[]]);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isGameWon, setIsGameWon] = useState(false);
-  const [isResetingGame, setisResetingGame] = useState(false);
-  const [isBoardReset, setIsBoardReset] = useState(false);
-  const [isSquencerStarted, setIsSquencerStarted] = useState(false);
+  const [state, send] = useMachine(msMachine)
 
   const newGame = () => {
     setBoard(placeMines(generateBoard(10), 10));
@@ -55,7 +56,6 @@ function useMineSweeper() {
 
   const resetGame = () => {
     const nextBoard = cloneDeep(board)
-
     //sanitize board of old classes
     nextBoard.map((row) => row.map((cell) => {
       cell.reset = true
@@ -63,15 +63,13 @@ function useMineSweeper() {
       delete cell.revealed
       return cell
     }))
-
-    // console.log(JSON.stringify(nextBoard));
-
     setBoard(nextBoard)
-    setisResetingGame(true)
+    state.matches('IDLE') && send('START')
   };
 
   useEffect(() => {
-    if (!isResetingGame) {
+    // console.log('state', state);
+    if (!state.matches('RESET_GAME')) {
       return
     }
 
@@ -81,13 +79,12 @@ function useMineSweeper() {
         delete cell.reset
         return cell
       }))
-
       setBoard(nextBoard)
-      setIsBoardReset(true)
+      send('BOARD_RESET')
       return
     }
 
-    if (isBoardReset && !isSquencerStarted) {
+    if (!state.context.isSquenceStarted && state.matches({ RESET_GAME: 'RUN_SEQUENCE' })) {
       const resetSequence = bottomToTopSequence(board)
 
       sequencer(resetSequence, 60, (sequenceItem) => {
@@ -98,16 +95,13 @@ function useMineSweeper() {
         })
         setBoard(nextBoard)
       }).then(() => {
+        send('SEQUENCE_FINISHED')
         newGame()
-        setisResetingGame(false)
-        setIsBoardReset(false)
-        setIsSquencerStarted(false)
-        setIsGameWon(false);
-        setIsGameOver(false);
+        setIsGameWon(false)
+        setIsGameOver(false)
       })
-      setIsSquencerStarted(true)
     }
-  }, [board, isResetingGame, isBoardReset, isSquencerStarted])
+  }, [board])
 
   return {
     board,
