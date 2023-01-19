@@ -8,10 +8,12 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
+    "@xstate/react": "^3.0.2",
     "lodash": "^4.17.21",
     "next": "latest",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "xstate": "^4.35.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.16.4",
