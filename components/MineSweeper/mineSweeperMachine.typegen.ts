@@ -5,17 +5,20 @@
         '@@xstate/typegen': true;
         internalEvents: {
           "done.invoke.mineSweeper.RESET_GAME.RESET_BOARD:invocation[0]": { type: "done.invoke.mineSweeper.RESET_GAME.RESET_BOARD:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
+"done.invoke.mineSweeper.RESET_GAME.RUN_SEQUENCE:invocation[0]": { type: "done.invoke.mineSweeper.RESET_GAME.RUN_SEQUENCE:invocation[0]"; data: unknown; __tip: "See the XState TS docs to learn how to strongly type this." };
 "xstate.init": { type: "xstate.init" };
         };
         invokeSrcNameMap: {
-          "resetBoard": "done.invoke.mineSweeper.RESET_GAME.RESET_BOARD:invocation[0]";
+          "gameOver": "done.invoke.mineSweeper.GAME_OVER:invocation[0]";
+"newGame": "done.invoke.NEW_GAME:invocation[0]";
+"resetBoard": "done.invoke.mineSweeper.RESET_GAME.RESET_BOARD:invocation[0]";
 "runSequence": "done.invoke.mineSweeper.RESET_GAME.RUN_SEQUENCE:invocation[0]";
         };
         missingImplementations: {
           actions: never;
           delays: never;
           guards: never;
-          services: "resetBoard" | "runSequence";
+          services: "gameOver" | "newGame" | "resetBoard" | "runSequence";
         };
         eventsCausingActions: {
           
@@ -27,10 +30,12 @@
           
         };
         eventsCausingServices: {
-          "resetBoard": "START";
+          "gameOver": "END_GAME";
+"newGame": "done.invoke.mineSweeper.RESET_GAME.RUN_SEQUENCE:invocation[0]" | "xstate.init";
+"resetBoard": "RESTART";
 "runSequence": "done.invoke.mineSweeper.RESET_GAME.RESET_BOARD:invocation[0]";
         };
-        matchesStates: "IDLE" | "RESET_GAME" | "RESET_GAME.RESET_BOARD" | "RESET_GAME.RUN_SEQUENCE" | { "RESET_GAME"?: "RESET_BOARD" | "RUN_SEQUENCE"; };
+        matchesStates: "GAME_OVER" | "GAME_STARTED" | "IDLE" | "NEW_GAME" | "RESET_GAME" | "RESET_GAME.RESET_BOARD" | "RESET_GAME.RUN_SEQUENCE" | { "RESET_GAME"?: "RESET_BOARD" | "RUN_SEQUENCE"; };
         tags: never;
       }
   

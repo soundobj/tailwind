@@ -17,6 +17,7 @@ function useMineSweeper() {
   const [isGameWon, setIsGameWon] = useState(false);
   const [state, send] = useMachine(mineSweeperMachine, {
     services: {
+      newGame: async () => newGame(),
       resetBoard: async () => {
         setTimeout(() => {
           const nextBoard = cloneDeep(board)
@@ -34,11 +35,26 @@ function useMineSweeper() {
           nextBoard[x][y].className = 'reset'
         })
         setBoard(nextBoard)
-      }).then(() => {
-        newGame()
-      })
+      }),
+      gameOver: async (context, event) => {
+        const { i, j } = event.data;
+        const sequence = filterCoordinates(
+          outwardSpiralSequence(board, [i, j]),
+          board,
+          { value: 'M' }
+        );
+        sequencer(sequence, 200, (sequenceItem) => {
+          const [x, y] = sequenceItem;
+          const nextBoard = cloneDeep(board)
+          nextBoard[x][y].className = 'mine'
+          nextBoard[x][y].revealed = true
+          setBoard(nextBoard);
+        })
+      },
     },
   })
+
+  console.log('state', state.value);
 
   const newGame = () => {
     setBoard(placeMines(generateBoard(10), 10));
@@ -54,18 +70,7 @@ function useMineSweeper() {
 
     if (isCellMine(nextBoard, [i, j])) {
       setIsGameOver(true);
-      const sequence = filterCoordinates(
-        outwardSpiralSequence(nextBoard, [i, j]),
-        nextBoard,
-        { value: 'M' }
-      );
-      sequencer(sequence, 200, (sequenceItem) => {
-        const [x, y] = sequenceItem;
-        const nextBoard = cloneDeep(board)
-        nextBoard[x][y].className = 'mine'
-        nextBoard[x][y].revealed = true
-        setBoard(nextBoard);
-      })
+      send('END_GAME', { data: { i, j } })
     } else if (isGameCompleted(nextBoard)) {
       setIsGameWon(true);
     }
@@ -82,10 +87,8 @@ function useMineSweeper() {
       return cell
     }))
     setBoard(nextBoard)
-    state.matches('IDLE') && send('START')
+    send('RESTART')
   };
-
-  useEffect(() => newGame(), []);
 
   return {
     board,
