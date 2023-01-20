@@ -44,7 +44,6 @@ const Cell = (props: CellType) => {
       animation = randomPeelAnimation()
     }
 
-
     if (animation) {
       const progressKeyframes = new KeyframeEffect(
         valRef.current,

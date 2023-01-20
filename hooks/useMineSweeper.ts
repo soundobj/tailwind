@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 import {
   generateBoard,
   isCellMine, isGameCompleted,
-  MineBoard, placeMines, updateBoard,
+  MineBoard, placeMines, updateBoard, sanitizeBoard, clearReset
 } from '../components/MineSweeper/utils';
 
 import mineSweeperMachine from '../components/MineSweeper/mineSweeperMachine';
@@ -24,13 +24,9 @@ function useMineSweeper(): MineSweeper {
     services: {
       newGame: async () => newGame(),
       resetBoard: async () => {
+        setBoard(sanitizeBoard(board))
         setTimeout(() => {
-          const nextBoard = cloneDeep(board)
-          nextBoard.map((row) => row.map((cell) => {
-            delete cell.reset
-            return cell
-          }))
-          setBoard(nextBoard)
+          setBoard(clearReset(board))
         })
       },
       runSequence: () => sequencer(resetSequence, 60, (sequenceItem) => {
@@ -64,11 +60,7 @@ function useMineSweeper(): MineSweeper {
   const newGame = () => setBoard(placeMines(generateBoard(10), 10))
 
   const updateGame = ([i, j]: number[]) => {
-    const nextBoard = updateBoard(
-      cloneDeep(board),
-      [i, j],
-    )
-
+    const nextBoard = updateBoard(cloneDeep(board),[i, j])
     if (isCellMine(nextBoard, [i, j])) {
       send('END_GAME', { data: { i, j } })
     } else if (isGameCompleted(nextBoard)) {
@@ -77,18 +69,7 @@ function useMineSweeper(): MineSweeper {
     setBoard(nextBoard);
   };
 
-  const resetGame = () => {
-    const nextBoard = cloneDeep(board)
-    //sanitize board of old classes
-    nextBoard.map((row) => row.map((cell) => {
-      cell.reset = true
-      cell.className = undefined
-      delete cell.revealed
-      return cell
-    }))
-    setBoard(nextBoard)
-    send('RESTART')
-  };
+  const resetGame = () => send('RESTART')
 
   return {
     board,

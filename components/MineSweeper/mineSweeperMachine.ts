@@ -1,14 +1,12 @@
 import { createMachine, assign } from "xstate";
 
 const mineSweeperMachine = 
-/** @xstate-layout N4IgpgJg5mDOIC5QFsCWA7MBlA7mMADmAE4B0AcgKIDqA+gOICCAspQMQQD2mpGAbpwDWYUmky58RMlTpNWCfpwDGAQwAuqbgG0ADAF1dexKAKdYqDd2MgAHogBM9gIykAzAE4dANlcAWAKwBvva+vl4ANCAAnogAHC7+OklOOgDs7qk6Tl5OAL65kWLYeIQkpHKUtNQA8uRsAEqUWAAqjPXNhtam5pbo1nYI-vZepGnxvk5Owdn+sZExCPZJpKmJSTq+7l6pvjqB+YUYxZJlFbQtbc2UACINTa3tnUgg3Raafc8DIS4e3n6BgRCYXmiFczlIm3cUNiOlcsKh7gOICKElKZDOF3aNzYZxq5CeJjMbysnwcrh+nh8QUBoQi0Qcy1W6w2Wx2e18SJRJSk5RYlUxV1ulHI1wYfIJLyJvX6Dgmbkp-yCQLpCzC-lI9jWaVcmS8vlisS8nKOqJ5Z2qADVKPU7gKJa9paTBjDSO5-OTXK5YptHEMQQg1Rqtakdd59YbjeJuWVGlhKM0xaxSLH47QAELVNq3Lg8RTCUQm6NkFMJirJpqpjNZhToASqXqGe1S94yhDuXau70eHWxds9-1+WJB5JDDazHX+SPHNHluOlvnJgCq5HOlAAiovhQBhdg5kR5kRck7FivzpP1Zerjfbyg1uvqd6N-RdZsk0ADP30hCxfzuFZrKYgX8fwQ3yAoQHQTgIDgawjzRF8ehbJ0AFoVUQVDRmZLD1l8Vwp1NMoZETSgEOJD531lexXS8WJUi8JYmVWexXH9WJwViT1PW2HRaNSVI8nAuCzT5KpalIx0KIQL1XA1Pwe31HQoV-f0lhcTVmU2bZdn2QTC2PXlWHOB5BXEpDJOCf0AhkpZ1gNRIrLw3So3080rXqUy31sUEf1IWi1niew2KGYDLOCDVITdfw9T2dx7HwotSAASWuAAZEjngdMyvIDewB3bFZ1icHsPTCDknOnHkS2IjzyOyrx3BkrwouGKKYVceinBU9rwuhXw6MyXCBMOZyZyqssqqreprhq1sdhcJr6IWtqOoHZiVgi4Dot-TV4v0saFwvFc42vcgdxmp1JicIdAqcTUAhCOjPwWMEZJ2BFNu02LJzAoA */
+/** @xstate-layout N4IgpgJg5mDOIC5QFsCWA7MBlA7mMADmAE4B0AcgKIDqA+gOICCAspQMQQD2mpGAbpwDWYUmky58RMlTpNWCfpwDGAQwAuqbgG0ADAF1dexKAKdYqDd2MgAHoh0AaEAE97AXzdOx2PIRKk5SlpqAHlyNgAlSiwAFUYImMNrU3NLdGs7BABWACYANlIdAHYADgBGABYyypyyvKySp1cEHJ0dUiKstraKgE48ooqdLIqPLwwfSX9A2lj4mMoAEUjouISkpBAUi010zcycgGYy0grDo7aS3pLS0oqmxGPD0l66vLyKioaKkoqcsZA3gkfjIMzmCSWbBmoXIGxMZh2Vn2iCOJ0OvR0eUOXxxOU+eQeLTaHS63T6AyGIwBQN8UgCLCC4IWy0o5EWDAZcK2CLSGRR2NOvSFvTxdV6WQ+hPe7Q+3zyJSylTKOSK1ImwLpMxCADVKBEVkyudteciEEUdCVCrkdP0yuUVUcpXVSGVDjocq0vhabr01eJaf4olhKDEOaxSEGQ7QAEIheLLLg8RTCUTqgNkSOhwIR6JR2PxhToASqNKGI083Z8hC9IYvX7ow6lGuNxouR4-Ug5Ulla1fEqNrJ+yYgnPBrMMiMAVXIs0oAEVJ6yAMLsRMiZMiGlTDO58fhiLT2cL5eUQvF9S7Mv6ZIVpGgTK5QkK3okto1T5ZLJFQ4eTwgdCcBAcDWFuII3qklamgAtK6zxVO85oDFkjZ5DohyElBNykKSb54g6eTVEOGr+DIYaUOBiJ7PeKJ-C88pFHkrSdMUuToW2CAlLUpD9ocvEDBaRSCWURHpvSrDBGEFEmtRCCHP2nbYi2Pw2uKvSEq0Jxdt0OjkoMwyjH+oGagysxrMyUmQTJmFZKcbyIZ0KFoYS8GkG6vRyfkVycXaInbmJQQ6nqFl3rYjwKtxzEWsqnG5J+zm0Xiwqfh8wwir5I6ZmRwVUaFCB5O5pD1IxRUlGhjFlOphwFIlQpnLUvFPOldKZdmmX5hEizZVWgwnEV+QSqVVW1IS5zPIMSUSpSIqDoZaZ+S1E4HjOwbHuQK5daa1R2p29ojLkFQMY+7GjR0fRCslU1dr+bhAA */
 createMachine({
   tsTypes: {} as import("./mineSweeperMachine.typegen").Typegen0,
   id: 'mineSweeper',
   initial: 'NEW_GAME',
   schema: {
-    context: {} as {
-    },
     services: {} as {
       runSequence: {
         data: void
@@ -35,8 +33,6 @@ createMachine({
       type: "GAME_WON";
     },
   },
-  context: {
-  },
   states: {
     NEW_GAME: {
       id: 'NEW_GAME',
@@ -58,9 +54,7 @@ createMachine({
       on: {
         RESTART: 'RESET_GAME',
         GAME_WON: 'GAME_WON',
-        END_GAME: {
-          target: "GAME_OVER",
-        },
+        END_GAME:  "GAME_OVER",
       },
     },
     GAME_OVER: {
@@ -70,9 +64,6 @@ createMachine({
       on: {
         RESTART: 'RESET_GAME'
       },
-    },
-    IDLE: {
-      id: 'IDLE',
     },
     RESET_GAME: {
       initial: 'RESET_BOARD',

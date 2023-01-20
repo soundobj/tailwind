@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash';
+
 export type Cell = {
   value: (number | string),
   revealed?: boolean,
@@ -165,4 +167,22 @@ export const getCoordsKey = (pos: [number, number]) => {
 export type RevealedCoords = Map<string, [number, number]>
 export const addRevealedCords = (pos: [number, number], set: RevealedCoords) => {
   set.set(getCoordsKey(pos), pos)
+}
+
+export const sanitizeBoard = (board: MineBoard): MineBoard => {
+  const nextBoard = cloneDeep(board)
+  return nextBoard.map((row) => row.map((cell) => {
+    cell.reset = true
+    cell.className = undefined
+    delete cell.revealed
+    return cell
+  }))
+}
+
+export const clearReset = (board: MineBoard): MineBoard => {
+  const nextBoard = cloneDeep(board)
+  return nextBoard.map((row) => row.map((cell) => {
+    delete cell.reset
+    return cell
+  }))
 }
