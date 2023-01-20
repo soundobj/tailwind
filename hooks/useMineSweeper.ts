@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useMachine } from '@xstate/react';
 import { cloneDeep } from 'lodash';
 import {
@@ -10,11 +10,16 @@ import {
 import mineSweeperMachine from '../components/MineSweeper/mineSweeperMachine';
 import { filterCoordinates, outwardSpiralSequence, sequencer, bottomToTopSequence } from '@/components/GridAnimator/utils';
 
-function useMineSweeper() {
+type MineSweeper = {
+  board: MineBoard;
+  state: "GAME_OVER" | "GAME_WON" | "GAME_STARTED" | "NEW_GAME" | "RESET_GAME";
+  updateGame: (coordinates: number[]) => void;
+  resetGame: () => void;
+}
+
+function useMineSweeper(): MineSweeper {
   const [board, setBoard] = useState<MineBoard>([[]]);
   const resetSequence = bottomToTopSequence(board)
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [isGameWon, setIsGameWon] = useState(false);
   const [state, send] = useMachine(mineSweeperMachine, {
     services: {
       newGame: async () => newGame(),
@@ -56,11 +61,7 @@ function useMineSweeper() {
 
   console.log('state', state.value);
 
-  const newGame = () => {
-    setBoard(placeMines(generateBoard(10), 10));
-    setIsGameOver(false);
-    setIsGameWon(false);
-  }
+  const newGame = () => setBoard(placeMines(generateBoard(10), 10))
 
   const updateGame = ([i, j]: number[]) => {
     const nextBoard = updateBoard(
@@ -69,10 +70,9 @@ function useMineSweeper() {
     )
 
     if (isCellMine(nextBoard, [i, j])) {
-      setIsGameOver(true);
       send('END_GAME', { data: { i, j } })
     } else if (isGameCompleted(nextBoard)) {
-      setIsGameWon(true);
+      send('GAME_WON')
     }
     setBoard(nextBoard);
   };
@@ -94,8 +94,8 @@ function useMineSweeper() {
     board,
     updateGame,
     resetGame,
-    isGameOver,
-    isGameWon,
+    //@ts-ignore
+    state: state.value,
   };
 }
 

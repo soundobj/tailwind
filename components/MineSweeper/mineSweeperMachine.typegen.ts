@@ -35,7 +35,7 @@
 "resetBoard": "RESTART";
 "runSequence": "done.invoke.mineSweeper.RESET_GAME.RESET_BOARD:invocation[0]";
         };
-        matchesStates: "GAME_OVER" | "GAME_STARTED" | "IDLE" | "NEW_GAME" | "RESET_GAME" | "RESET_GAME.RESET_BOARD" | "RESET_GAME.RUN_SEQUENCE" | { "RESET_GAME"?: "RESET_BOARD" | "RUN_SEQUENCE"; };
+        matchesStates: "GAME_OVER" | "GAME_STARTED" | "GAME_WON" | "IDLE" | "NEW_GAME" | "RESET_GAME" | "RESET_GAME.RESET_BOARD" | "RESET_GAME.RUN_SEQUENCE" | { "RESET_GAME"?: "RESET_BOARD" | "RUN_SEQUENCE"; };
         tags: never;
       }
   

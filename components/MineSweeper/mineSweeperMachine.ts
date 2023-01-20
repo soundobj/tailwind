@@ -1,7 +1,7 @@
 import { createMachine, assign } from "xstate";
 
 const mineSweeperMachine = 
-/** @xstate-layout N4IgpgJg5mDOIC5QFsCWA7MBlA7mMADmAE4B0AcgKIDqA+gOICCAspQMQQD2mpGAbpwDWYUmky58RMlTpNWCfpwDGAQwAuqbgG0ADAF1dexKAKdYqDd2MgAHogBMATnukALPYCMADgDsAVgAaEABPRFcvP1JHAGZXH18vewA2dw9onwBfDKCxbDxCElI5SlosABVGACUyygARNkrKcqqyw2tTc0t0azsEex9XUmiPe0CQxD9XSNdY+Pjk1NcsnIw8yULi0orqurZKclqGFko2pBAOi01us97+weHRoNCEJJ0fKNmEhc8l7JBciQFMibADyADVKJUGk1tq19O0zJcrDcwo4dKQktEYv4vNF7E4dNEnogfISMbFhu4dPj+l5lv9VoCpKQAJK1AAy7EazWqpxMiK6PQc9i8GN8Y2e0WibkcsscSS8EXirje9IB+WZ3MoZSOrFIWp1ACEQVV6lweIphKJGRrCgbdZR9U1tbRjaaFOgBKouoY+ecBVchX0fEkon4BokdIrXo5JsSENE-C4YuEdH4vI4Q0lRmqbesyPbivqAKrkUqUACKxf2AGF2OaRJaROr806sC6i5VS+Wq7XKB6veorr74WcLoKUQg0tKY9FFbF+gMieMEF4PDK5QqlV4VZl6ehOBA4NYW0CEZ1A5OALTheNXyakHRP6lJnRJOY6Dx+XPiW3SGgOueSLXKAvQ6PGcQuDMcRfCknjpD+axAkUxxbC0dRAROoGIOBK5JH40opnMiRwR4vwrL+raghClSYZe2EILhzzxKK0HEd8ZGIUyhRspydHIgx7jxl4oZRlK-TOPMpIeFxf5th2xz8SBtgOI4GJOLEZEjHM+HLs89gqh8cTYl4T6TLismtoWxzyUaJqVLUSlBj47zZimWm0iGEqIHirGfPMpEIX8p6as6Oqdt27a9uQdZOZOUyDKMMx+CMhIePh3kJiKbj+SRqRBVkQA */
+/** @xstate-layout N4IgpgJg5mDOIC5QFsCWA7MBlA7mMADmAE4B0AcgKIDqA+gOICCAspQMQQD2mpGAbpwDWYUmky58RMlTpNWCfpwDGAQwAuqbgG0ADAF1dexKAKdYqDd2MgAHogBM9gIykAzAE4dANlcAWAKwBvva+vl4ANCAAnogAHC7+OklOOgDs7qk6Tl5OAL65kWLYeIQkpHKUtNQA8uRsAEqUWAAqjPXNhtam5pbo1nYI-vZepGnxvk5Owdn+sZExCPZJpKmJSTq+7l6pvjqB+YUYxZJlFbQtbc2UACINTa3tnUgg3Raafc8DIS4e3n6BgRCYXmiFczlIm3cUNiOlcsKh7gOICKElKZDOF3aNzYZxq5CeJjMbysnwcrh+nh8QUBoQi0Qcy1W6w2Wx2e18SJRJSk5RYlUxV1ulHI1wYfIJLyJvX6Dgmbkp-yCQLpCzC-lI9jWaVcmS8vlisS8nKOqJ5Z2qADVKPU7gKJa9paTBjDSO5-OTXK5YptHEMQQg1Rqtakdd59YbjeJuWVGlhKM0xaxSLH47QAELVNq3Lg8RTCUQm6NkFMJirJpqpjNZhToASqXqGe1S94yhDuXau70eHWxds9-1+WJB5JDDazHX+SPHNHluOlvnJgCq5HOlAAiovhQBhdg5kR5kRck7FivzpP1Zerjfbyg1uvqd6N-RdZsk0ADP30hCxfzuFZrKYgX8fwQ3yAoQHQTgIDgawjzRF8ehbJ0AFoVUQVDRmZLD1l8Vwp1NMoZETSgEOJD531lexXS8WJUi8JYmVWexXH9WJwViT1PW2HRaNSVI8nAuCzT5KpalIx0KIQL1XA1Pwe31HQoV-f0lhcTVmU2bZdn2QTC2PXlWHOB5BXEpDJOCf0AhkpZ1gNRIrLw3So3080rXqUy31sUEf1IWi1niew2KGYDLOCDVITdfw9T2dx7HwotSAASWuAAZEjngdMyvIDewB3bFZ1icHsPTCDknOnHkS2IjzyOyrx3BkrwouGKKYVceinBU9rwuhXw6MyXCBMOZyZyqssqqreprhq1sdhcJr6IWtqOoHZiVgi4Dot-TV4v0saFwvFc42vcgdxmp1JicIdAqcTUAhCOjPwWMEZJ2BFNu02LJzAoA */
 createMachine({
   tsTypes: {} as import("./mineSweeperMachine.typegen").Typegen0,
   id: 'mineSweeper',
@@ -31,6 +31,8 @@ createMachine({
       };
     } | {
       type: "RESTART";
+    } | {
+      type: "GAME_WON";
     },
   },
   context: {
@@ -47,9 +49,15 @@ createMachine({
         ],
       },
     },
+    GAME_WON: {
+      on: {
+        RESTART: 'RESET_GAME',
+      }
+    },
     GAME_STARTED: {
       on: {
         RESTART: 'RESET_GAME',
+        GAME_WON: 'GAME_WON',
         END_GAME: {
           target: "GAME_OVER",
         },
@@ -58,20 +66,12 @@ createMachine({
     GAME_OVER: {
       invoke: {
         src: "gameOver",
-        // onDone: [ 
-          // {
-          //   target: 'IDLE',
-          // }
-        // ],
       },
       on: {
         RESTART: 'RESET_GAME'
       },
     },
     IDLE: {
-      on: {
-        RESTART: 'RESET_GAME'
-      },
       id: 'IDLE',
     },
     RESET_GAME: {
